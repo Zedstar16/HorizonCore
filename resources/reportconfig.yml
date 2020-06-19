@@ -1,0 +1,32 @@
+report-cooldown: 15
+
+main-form:
+  title: "§l§4Report Form"
+  content: "Select an issue to report"
+  #Labels for the report buttons
+  bugreport: "§l§8Report a Bug"
+  playerreport: "§l§fReport a Player"
+
+player-form:
+  title: "§l§4Report Player"
+  content: ""
+  dropdownbox-label: "Select a player from the list"
+  inputbox-title: "Provide a reason for report"
+  #this is grey like text that appears inside the box before the player types in it
+  typehint-for-inputbox: "Enter reason here"
+  #Minimum amount of characters long that the reason has to be for it to send (reduce spam reports)
+  min-reason-length: 5
+
+bug-form:
+  title: "§l§4Report Bug"
+  content: ""
+  inputbox-title: "Provide details about the bug/issue"
+  typehint-for-inputbox: "Enter reason here"
+  #Minimum amount of characters long that the reason has to be for it to send (reduce spam reports)
+  min-reason-length: 5
+
+messages:
+  report-in-cooldown: "§cReport is currently on cooldown for §f{cooldown}§c seconds"
+  report-success: "§bReport successfully sent to staff online discord and server"
+  reason-too-short: "§cYou must provide a longer reason"
+  exit-ui: "§9You have exited the Report form"

@@ -11,7 +11,7 @@ class WorldMap
         return [
             "buildpvp" => "",
             "gapple" => "",
-            "nodebuff" => "",
+            "nodebuff" => "world",
             "fist" => "",
             "combo" => ""
             ];

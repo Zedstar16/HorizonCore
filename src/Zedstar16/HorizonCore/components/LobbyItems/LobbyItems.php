@@ -21,13 +21,16 @@ class LobbyItems
                 new DuelForm($player);
                 break;
             case "profile":
-                new Profile($player);
+                new ProfileForm($player);
                 break;
             case "stats":
-                $this->Stats();
+                new StatsForm($player);
                 break;
-                case "settings";
-
+            case "toys":
+                new CosmeticsToysForm($player);
+                break;
+            case "settings";
+                new SettingsForm($player);
                 break;
         }
     }

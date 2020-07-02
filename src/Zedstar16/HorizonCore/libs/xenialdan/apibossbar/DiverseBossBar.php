@@ -17,7 +17,7 @@ use pocketmine\Player;
 /**
  * Class DiverseBossBar
  * This Bar should be used if the data is different for each player
- * You can use methods of @see BossBarTitles to set defaults
+ * You can use methods of @see BossBar to set defaults
  * @package xenialdan\apibossbar
  */
 class DiverseBossBar extends BossBar
@@ -88,7 +88,7 @@ class DiverseBossBar extends BossBar
     {
         foreach ($players as $player) {
             $this->titles[$player->getId()] = $title;
-            $this->sendEntityDataPacket([$player]);
+            #$this->sendEntityDataPacket([$player]);
             $this->sendBossTextPacket([$player]);
         }
         return $this;
@@ -108,7 +108,7 @@ class DiverseBossBar extends BossBar
     {
         foreach ($players as $player) {
             $this->subTitles[$player->getId()] = $subTitle;
-            $this->sendEntityDataPacket([$player]);
+            #$this->sendEntityDataPacket([$player]);
             $this->sendBossTextPacket([$player]);
         }
         return $this;
@@ -136,7 +136,7 @@ class DiverseBossBar extends BossBar
      */
     public function setPercentageFor(array $players, float $percentage): DiverseBossBar
     {
-        $percentage = (float)max(0.01, $percentage);
+        $percentage = (float)max(0.00, $percentage);
         foreach ($players as $player) {
             $this->getAttributeMap($player)->getAttribute(Attribute::HEALTH)->setValue($percentage * $this->getAttributeMap($player)->getAttribute(Attribute::HEALTH)->getMaxValue(), true, true);
         }
@@ -172,12 +172,13 @@ class DiverseBossBar extends BossBar
 
     /**
      * @param Player[] $players
+     *@deprecated
      */
     protected function sendSpawnPacket(array $players): void
     {
         $pk = new AddActorPacket();
         $pk->entityRuntimeId = $this->entityId;
-        $pk->type = $this->getEntity() instanceof Entity ? $this->getEntity()::NETWORK_ID : static::NETWORK_ID;
+        $pk->type = AddActorPacket::LEGACY_ID_MAP_BC[$this->getEntity() instanceof Entity ? $this->getEntity()::NETWORK_ID : static::NETWORK_ID];
         foreach ($players as $player) {
             $pkc = clone $pk;
             $pkc->attributes = $this->getAttributeMap($player)->getAll();

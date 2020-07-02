@@ -29,6 +29,15 @@ class Constants
         self::KIT_DUELS => "duels"
     ];
 
+    public static $ffa_arenas = [
+        "BuildPvP",
+        "NoDebuff",
+        "Gapple",
+        "Combo",
+        "Fist"
+    ];
+
+
     public static $enchantment_by_id = [
         0 => "Protection",
         1 => "Fire_Protection",

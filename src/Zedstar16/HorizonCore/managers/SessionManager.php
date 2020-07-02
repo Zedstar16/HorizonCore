@@ -12,33 +12,30 @@ use Zedstar16\HorizonCore\session\Session;
 class SessionManager
 {
     /** @var Session[] */
-    private static $seassions = [];
+    private static $sessions = [];
 
     public static function add(HorizonPlayer $player)
     {
-        Server::getInstance()->getLogger()->info("Added {$player->getName()}");
         $session = new Session($player);
-        self::$seassions[] = $session;
+        self::$sessions[$player->getName()] = $session;
         $session->clientData = Horizon::$players[$player->getName()]["clientData"];
     }
 
     public static function getSession(HorizonPlayer $player)
     {
-        foreach (self::$seassions as $session) {
-            if ($session->getPlayer() === $player) {
-                return $session;
-            }
-        }
-        return null;
+        return self::$sessions[$player->getName()] ?? null;
     }
 
     public static function remove(HorizonPlayer $player){
-        foreach (self::$seassions as $key => $session) {
-            if ($session->getPlayer() === $player) {
-                unset(self::$seassions[$key]);
-                unset($session);
-            }
+        $session = self::getSession($player);
+        $session_data = $session->getSessionStats();
+        $player_data = PlayerDataManager::getData($player);
+        foreach($session_data as $key => $value){
+            $player_data[$key] += $value;
         }
+        PlayerDataManager::saveData($player, $player_data);
+        unset(self::$sessions[$player->getName()]);
+        unset($session);
     }
 
 }

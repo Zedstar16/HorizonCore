@@ -4,23 +4,33 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore;
 
+use pocketmine\event\Event;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\Server;
+use Zedstar16\HorizonCore\commands\admin\EvalCommand;
+use Zedstar16\HorizonCore\commands\admin\FSenderCommand;
 use Zedstar16\HorizonCore\commands\admin\SetKitCommand;
 use Zedstar16\HorizonCore\commands\BaseCommand;
 use Zedstar16\HorizonCore\commands\GamemodeCommand;
 use Zedstar16\HorizonCore\commands\ReportCommand;
+use Zedstar16\HorizonCore\components\misc\FakeCommandSender;
+use Zedstar16\HorizonCore\events\HorizonEvent;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenuHandler;
+use Zedstar16\HorizonCore\libs\xenialdan\apibossbar\API;
 use Zedstar16\HorizonCore\libs\xenialdan\apibossbar\BossBar;
+use Zedstar16\HorizonCore\listeners\InventoryEventListener;
 use Zedstar16\HorizonCore\listeners\NetworkListener;
 use Zedstar16\HorizonCore\listeners\EntityEventListener;
 use Zedstar16\HorizonCore\listeners\PlayerEventListener;
+use Zedstar16\HorizonCore\managers\FFAManager;
 use Zedstar16\HorizonCore\managers\FileManager;
+use Zedstar16\HorizonCore\managers\PlayerDataManager;
 use Zedstar16\HorizonCore\tasks\BossBarUpdateTask;
+use Zedstar16\HorizonCore\tasks\Ticker;
 
 class Horizon extends PluginBase implements Listener
 {
@@ -40,6 +50,7 @@ class Horizon extends PluginBase implements Listener
     {
         self::$instance = $this;
         self::$currentbossbartick = 0;
+        API::load($this);
         $this->initializeFiles();
         $this->getLogger()->info("Horizon Core Enabled");
         $this->initializeListeners();
@@ -49,6 +60,7 @@ class Horizon extends PluginBase implements Listener
         if (!InvMenuHandler::isRegistered()) {
             InvMenuHandler::register($this);
         }
+        FFAManager::loadArenas();
     }
 
     public static function Config(): array
@@ -57,14 +69,14 @@ class Horizon extends PluginBase implements Listener
             "scoreboardtick" => 5,
             "praczone" => [
                     "max" => [
-                        "x" => 100,
-                        "y" => 100,
-                        "z" => 100
+                        "x" => 4,
+                        "y" => 72,
+                        "z" => 4
                     ],
                     "min" => [
-                        "x" => 0,
-                        "y" => 0,
-                        "z" => 0
+                        "x" => -4,
+                        "y" => 65,
+                        "z" => -4
                     ]
                 ],
             "ffalevels" => [""]
@@ -86,7 +98,9 @@ class Horizon extends PluginBase implements Listener
             new BaseCommand(),
             new GamemodeCommand(),
             new ReportCommand(),
-            new SetKitCommand()
+            new SetKitCommand(),
+            new FSenderCommand(),
+            new EvalCommand()
         ]);
     }
 
@@ -97,7 +111,8 @@ class Horizon extends PluginBase implements Listener
             new Permission("horizon.base", "o", Permission::DEFAULT_OP),
             new Permission("horizon.gamemode", "", "op"),
             new Permission("horizon.gamemode.other", "", "op"),
-            new Permission("horizon.report", "", "true")
+            new Permission("horizon.report", "", "true"),
+            new Permission("horizon.admin", "", "op"),
         ]);
     }
 
@@ -117,7 +132,8 @@ class Horizon extends PluginBase implements Listener
         $this->registerListeners($this, [
             new PlayerEventListener(),
             new NetworkListener(),
-            new EntityEventListener()
+            new EntityEventListener(),
+            new InventoryEventListener()
         ]);
     }
 
@@ -134,7 +150,7 @@ class Horizon extends PluginBase implements Listener
 
     public function registerTasks()
     {
-        //$this->getScheduler()->scheduleRepeatingTask(new BossBarUpdateTask(), 60);
+        $this->getScheduler()->scheduleRepeatingTask(new Ticker(), 20);
     }
 
     private function initializeFiles()

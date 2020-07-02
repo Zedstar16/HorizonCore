@@ -1,0 +1,14 @@
+armor:
+  button-name: "§0Armor"
+  path: "resources/items/diamond_chestplate.png"
+  contents:
+    - "276:0:1:250"
+    - "270:0:1:200"
+    - "278:0:1:500"
+items:
+  button-name: "§0Items"
+  path: "resources/items/diamond_pickaxe.png"
+  contents:
+    - "276:0:1:250"
+    - "270:0:1:200"
+    - "278:0:1:500"

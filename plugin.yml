@@ -1,0 +1,17 @@
+name: HorizonCore
+main: Zedstar16\HorizonCore\Horizon
+version: 0.1
+api: 3.7.0
+load: POSTWORLD
+author: Zedstar16
+description: factions core for horizonpe
+
+permissions:
+
+ skeleton:
+  default: true
+  description: "p"
+  children:
+   skeleton.command:
+    default: true
+    description: "Allows the use of /examplecommand"

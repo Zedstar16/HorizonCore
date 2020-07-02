@@ -25,20 +25,21 @@ class SetKitCommand extends Command
 
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-        if (count($args) >= 2 && $sender instanceof HorizonPlayer) {
+        echo 1;
+        if (count($args) >= 2) {
+            echo "a";
             switch ($args[0]) {
                 case "duel":
                     break;
                 case "ffa":
                     $kit = FileManager::getYamlData("ffa/$args[1]");
                     $kit["armor"] = KitManager::indexContents($sender->getArmorInventory()->getContents());
-                    $kit["item"] = KitManager::indexContents($sender->getInventory()->getContents());
+                    $kit["inventory"] = KitManager::indexContents($sender->getInventory()->getContents());
                     FileManager::saveYamlData("ffa/$args[1]", $kit);
 
                     break;
                 case "test":
-                    $e = new KitEditor($sender);
-                    $e->primary();
+                    new KitEditor($sender);
                     break;
                 case "rename":
                     if (isset($args[1])) {
@@ -53,6 +54,8 @@ class SetKitCommand extends Command
             }
         }
     }
+
+
 
 
 }

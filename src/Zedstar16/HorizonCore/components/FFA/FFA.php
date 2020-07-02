@@ -4,6 +4,7 @@
 namespace Zedstar16\HorizonCore\components\FFA;
 
 
+use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\components\Constants;
@@ -18,10 +19,13 @@ class FFA
     public const INVENTORY = 1;
 
     private $name;
+    /** @var Level */
+    private $level;
 
     public function __construct(string $name)
     {
         $this->name = $name;
+        $this->level = Server::getInstance()->getLevelByName($this->cfg()["level"]);
     }
 
     public function getName(){
@@ -36,12 +40,13 @@ class FFA
     public function teleportToArena(HorizonPlayer $player)
     {
         $player->clearInventory();
-        $player->teleport(Server::getInstance()->getLevelByName($this->cfg()["level"])->getSpawnLocation());
+        $player->teleport($this->level->getSpawnLocation());
+        $this->addInventoryContents($player);
     }
 
     public function addInventoryContents(HorizonPlayer $player)
     {
-        $kit = KitManager::getKit($this, $this->name, Constants::KIT_FFA);
+        $kit = KitManager::getKit($player, $this->name, Constants::KIT_FFA);
         $armor = $kit["armor"];
         $armorcontents  = [];
         foreach($armor as $slot => $item){
@@ -49,11 +54,15 @@ class FFA
         }
         $contents  = [];
         $inventory = $kit["inventory"];
-        foreach($armor as $slot => $item){
+        foreach($inventory as $slot => $item){
             $contents[$slot] = KitManager::parseItem($item);
         }
         $player->getArmorInventory()->setContents($armor);
         $player->getInventory()->setContents($contents);
+    }
+
+    public function getPlayers(){
+        return $this->level->getPlayers();
     }
 
 

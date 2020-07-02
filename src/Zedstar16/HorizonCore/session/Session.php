@@ -5,6 +5,7 @@ namespace Zedstar16\HorizonCore\session;
 
 
 use Zedstar16\HorizonCore\components\BossBarTitles;
+use Zedstar16\HorizonCore\components\HUD\Scoreboard;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\libs\xenialdan\apibossbar\BossBar;
@@ -23,10 +24,13 @@ class Session
 
     public $clientData = [];
 
+    public $killstreak = 0;
+    /** @var Scoreboard */
+    public $scoreboard;
+
     public function __construct(HorizonPlayer $player)
     {
         $this->player = $player;
-      //  $player->teleportToSpawn();
         $data = [
             "damage_taken",
             "damage_dealt",
@@ -36,7 +40,7 @@ class Session
             "kills",
             "deaths",
             "chat_messages",
-            "dropped_items",
+            "items_dropped",
             "items_picked_up",
             "items_consumed",
             "blocks_placed",
@@ -47,17 +51,13 @@ class Session
         $this->bossbar->addPlayer($player);
         $this->bossbar->setTitle("§bPlaying on §6Horizon§cPE");
         $this->bossbar->setSubTitle(BossBarTitles::TITLES[0]);
+        $this->scoreboard = new Scoreboard($player);
         Horizon::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new BossBarUpdateTask($player), 50, 80);
     }
 
     public function getPlayer(): HorizonPlayer
     {
         return $this->player;
-    }
-
-    public function click()
-    {
-        $this->data["clicks"]++;
     }
 
     public function getPlayerData(){
@@ -75,9 +75,26 @@ class Session
         return $return;
     }
 
+    public function getKillStreak(){
+        return $this->killstreak;
+    }
+
+    public function addKillToStreak(){
+        return $this->killstreak++;
+    }
+
+    public function resetKillStreak(){
+
+    }
+
+
     public function getSessionStats()
     {
         return $this->data;
+    }
+
+    public function incrementValue($key, $value = 1){
+        $this->data[$key] += $value;
     }
 
     public function getBossBar() : DiverseBossBar{

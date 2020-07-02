@@ -24,7 +24,7 @@ class FFAManager
         Horizon::getInstance()->getLogger()->notice("$i FFA Maps Loaded");
     }
 
-    public function getArena(string $name): ?FFA
+    public static function getArena(string $name): ?FFA
     {
         foreach (self::$arenas as $arena) {
             if ($arena->getName() == $name) {
@@ -34,9 +34,9 @@ class FFAManager
         return null;
     }
 
-    private static function getArenaNames()
+    public static function getArenaNames()
     {
-        $list = glob(Horizon::getInstance()->getDataFolder() . "ffa/*");
+        $list = array_diff(scandir(Horizon::getInstance()->getDataFolder() . "resources/ffa"), ['..', '.']);
         $names = [];
         foreach ($list as $file) {
             $names[] = substr($file, 0, strlen($file) - 4);

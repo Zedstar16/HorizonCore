@@ -7,59 +7,77 @@ use pocketmine\Player;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\HorizonPlayer;
+use Zedstar16\HorizonCore\utils\Utils;
 
 class PlayerDataManager
 {
 
-    public static function getData(string $playername)
+    public static function getData($player)
     {
-        if(!self::hasData($playername)){
-            self::init(Horizon::getPlayer($playername));
+        $player = Utils::stringify($player);
+        if (!self::isRegistered($player)) {
+            self::init(Horizon::getPlayer($player));
         }
-        return FileManager::getJsonData("players/$playername");
+        return FileManager::getJsonData("players/$player");
     }
 
-    public static function saveData(string $playername, array $data)
+    public static function saveData($player, array $data)
     {
-        FileManager::saveJsonData("players/".$playername, $data);
+        $player = Utils::stringify($player);
+        FileManager::saveJsonData("players/" . $player, $data);
     }
 
-    public static function hasData(string $playername){
-        return file_exists(Horizon::getInstance()->getDataFolder()."players/$playername.json");
-    }
-
-    public static function init(HorizonPlayer $player)
+    public static function isRegistered($player)
     {
-        $name = $player->getLowerCaseName();
-        $data = [
-            "ips" => [],
-            "cids" => [],
-            "deviceids" => [],
-            "hits" => 0,
-            "damage_taken" => 0,
-            "damage_dealt" => 0,
-            "clicks" => 0,
-            "distance_travelled" => 0,
-            "kills" => 0,
-            "deaths" => 0,
-            "joins" => 0,
-            "chat_messages" => 0,
-            "dropped_items" => 0,
-            "items_picked_up" => 0,
-            "items_consumed" => 0,
-            "blocks_placed" => 0,
-            "blocked_broken" => 0,
-            "last_seen_data" => [
-                "ip" => "",
-                "cid" => "",
-                "deviceid" => "",
-                "os" => "",
-                "ui" => "",
-                "controls" => "",
-                "timestamp" => ""
-            ]
-        ];
-        FileManager::saveJsonData("players/".$name, $data);
+        $player = Utils::stringify($player);
+        return file_exists(Horizon::getInstance()->getDataFolder() . "players/$player.json");
+    }
+
+    public static function incrementValue($player, $key, $value){
+        $data = self::getData($player);
+        $data[$key] += $value;
+        self::saveData($player, $data);
+    }
+
+
+    public static function init($player)
+    {
+        $playername = Utils::stringify($player);
+        $player = Server::getInstance()->getPlayer($playername);
+        if (!self::isRegistered($player)) {
+            $data = [
+                "username-cased" => $player->getName(),
+                "ips" => [],
+                "cids" => [],
+                "deviceids" => [],
+                "hits" => 0,
+                "experience" => 0,
+                "coins" => 0,
+                "damage_taken" => 0,
+                "damage_dealt" => 0,
+                "clicks" => 0,
+                "distance_travelled" => 0,
+                "kills" => 0,
+                "deaths" => 0,
+                "joins" => 0,
+                "chat_messages" => 0,
+                "items_dropped" => 0,
+                "items_picked_up" => 0,
+                "items_consumed" => 0,
+                "blocks_placed" => 0,
+                "blocks_broken" => 0,
+                "last_seen_data" => [
+                    "ip" => "",
+                    "cid" => "",
+                    "deviceid" => "",
+                    "os" => "",
+                    "ui" => "",
+                    "controls" => "",
+                    "timestamp" => ""
+                ]
+            ];
+            FileManager::saveJsonData("players/" . $playername, $data);
+        }
     }
 
 

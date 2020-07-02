@@ -16,31 +16,18 @@ class EntityEventListener implements Listener
 
     public function onDamage(EntityDamageEvent $event){
         $entity = $event->getEntity();
-        if($event instanceof EntityDamageByEntityEvent){
-            $damager = $event->getDamager();
-            if($entity instanceof HorizonPlayer && $damager instanceof HorizonPlayer){
-                $damager->lasthit = time();
-                $entity->lasthit = time();
-                $health = round($entity->getHealth());
-                $color = $this->getHealthColor($health);
-                $entity->setScoreTag("{$color}{$health}❤");
+        if($entity instanceof HorizonPlayer) {
+            $entity->updateScoreTag();
+            if ($event instanceof EntityDamageByEntityEvent) {
+                $damager = $event->getDamager();
+                if ($damager instanceof HorizonPlayer) {
+                    $damager->getSession()->incrementValue("hits");
+                    $damager->getSession()->incrementValue("damage_dealt", $event->getFinalDamage());
+                    $damager->lasthit = time();
+                    $entity->lasthit = time();
+                }
             }
+            $entity->getSession()->incrementValue("damage_taken", $event->getFinalDamage());
         }
-    }
-
-    public function getHealthColor($health) : string{
-        $color = '';
-        if($health >= 16){
-            $color = "§a";
-        }elseif($health < 16 && $health >= 12){
-            $color = "§e";
-        }elseif($health < 12 && $health >= 8){
-            $color = "§6";
-        }elseif($health < 8 && $health >= 4){
-            $color = "§c";
-        }elseif($health < 4 && $health >= 0){
-            $color = "§4";
-        }
-        return $color;
     }
 }

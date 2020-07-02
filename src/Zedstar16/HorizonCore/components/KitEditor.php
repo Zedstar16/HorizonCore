@@ -6,12 +6,14 @@ namespace Zedstar16\HorizonCore\components;
 use pocketmine\block\utils\ColorBlockMetaHelper;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\item\Item;
+use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use Zedstar16\HorizonCore\libs\jojoe77777\FormAPI\SimpleForm;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenu;
 use Zedstar16\HorizonCore\managers\FileManager;
 use Zedstar16\HorizonCore\managers\KitManager;
+use Zedstar16\HorizonCore\utils\Utils;
 
 class KitEditor
 {
@@ -39,7 +41,7 @@ class KitEditor
                 $this->openFFAKitEditorUI();
             }
         });
-        $form->setTitle("Settings");
+        $form->setTitle("SettingsForm");
         $form->setContent("Select an option");
         foreach ($buttons as $button) {
             $form->addButton($button);
@@ -50,40 +52,91 @@ class KitEditor
     public function openFFAKitEditorUI()
     {
         $buttons = ["BuildPvP", "NoDebuff", "Gapple", "Combo"];
-        $form = new SimpleForm(function (Player $player, $data = null)  use($buttons) {
+        $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
             if ($data === null) {
                 return;
-            }else{
+            } else {
                 $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_FFA);
             }
-
         });
-        $form->setTitle("Settings");
-        $form->setContent("Select an option, Rearrange the kit then close the Inventory to save it");
+        $form->setTitle("SettingsForm");
+        $form->setContent("Select an option");
         foreach ($buttons as $button) {
             $form->addButton($button);
         }
         $this->p->sendForm($form);
-
     }
 
     public function openDuelKitEditorUI()
     {
-
+        $buttons = ["NoDebuff", "Gapple", "Combo", "BuildPvP", "Diamond", "Archer", "Spleef"];
+        $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
+            if ($data === null) {
+                return;
+            } else {
+                $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_DUELS);
+            }
+        });
+        $form->setTitle("SettingsForm");
+        $form->setContent("Select an option");
+        foreach ($buttons as $button) {
+            $form->addButton($button);
+        }
+        $this->p->sendForm($form);
     }
 
-    public function openKitEditor($kit, $type){
+    public function openNormalKitEditorUI()
+    {
+        $buttons = [];
+        $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
+            if ($data === null) {
+                return;
+            } else {
+                $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_DUELS);
+            }
+        });
+        $form->setTitle("SettingsForm");
+        $form->setContent("Select an option");
+        foreach ($buttons as $button) {
+            $form->addButton($button);
+        }
+        $this->p->sendForm($form);
+    }
+
+    public function openKitEditor($kit, $type)
+    {
         $menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
         $menu->readonly(false);
-        $contents = $this->getEditorContents($kit, $type);
         $playerinventory = $this->p->getInventory()->getContents();
-        $menu->setListener(function(Player $player, Item $itemClicked, Item $itemClickedWith, SlotChangeAction $action) use($playerinventory){
-            if(in_array($itemClicked, $playerinventory) or in_array($itemClickedWith, $playerinventory)){
+        $menu->setListener(function (Player $player, Item $itemClicked, Item $itemClickedWith, SlotChangeAction $action) use ($playerinventory, $menu, $kit, $type) {
+            if (!in_array($itemClicked, $menu->getInventory()->getContents()) or in_array($itemClickedWith, $playerinventory)) {
+                echo 1;
+                return false;
+            }
+            if ($action->getInventory() === $player->getInventory()) {
+                echo 2;
+                return false;
+            }
+            if ($itemClicked->getId() == ItemIds::STAINED_GLASS_PANE) {
+                echo 3;
+                return false;
+            }
+            if ($itemClicked->getId() == ItemIds::CONCRETE) {
+                if ($itemClicked->getDamage() == 14) {
+                    $player->sendMessage("§cExit without saving changes to kit inventory");
+                    $player->removeAllWindows();
+                } elseif ($itemClicked->getDamage() == 5) {
+                    $this->saveContents($player, $kit, $type, $action->getInventory()->getContents());
+                    $player->sendMessage("§aSuccessfully saved changes to kit");
+                    $player->removeAllWindows();
+                } else {
+                    $menu->getInventory()->setContents($this->getEditorContents($kit, $type, true));
+                }
                 return false;
             }
             return true;
         });
-        $menu->setInventoryCloseListener(function (Player $player, InvMenuInventory $inventory)  {
+        $menu->setInventoryCloseListener(function (Player $player, InvMenuInventory $inventory) {
             $inv = $player->getInventory()->getContents();
             foreach ($inv as $item) {
                 if ($item->getNamedTag()->hasTag("chest")) {
@@ -91,14 +144,35 @@ class KitEditor
                 }
             }
         });
-        $menu->setName("Your $kit Inventory");
+        $typed = Utils::getNamed(Constants::$kit[$type]);
+        $named = Utils::getNamed($kit);
+        $menu->setName("Your §d$typed §c$named §rInventory");
         $menu->getInventory()->setContents($this->getEditorContents($kit, $type));
         $menu->send($this->p);
     }
 
-    private function getEditorContents($kit, $type): array
+    public function saveContents($player, $kit, $type, $contents)
     {
-        $kit = KitManager::getKit($this->p, $kit, $type);
+        $data = [];
+        print_r($contents);
+        foreach ($contents as $key => $item) {
+            if ($item->getNamedTagEntry("chest") == null) {
+                unset($data[$key][array_keys($data[$key], $item)[0]]);
+            }
+        }
+        for ($i = 0; $i < 36; $i++) {
+            $data["inventory"][$i] = KitManager::indexItem($contents[$i] ?? Item::get(0));
+        }
+        for ($i = 0; $i <= 3; $i++) {
+            $key = $i + 38;
+            $data["armor"][$i] = KitManager::indexItem($contents[$key] ?? Item::get(0));
+        }
+        KitManager::saveCustomKit($player, $kit, $type, $data);
+    }
+
+    private function getEditorContents($kit, $type, $default = false): array
+    {
+        $kit = KitManager::getKit($this->p, $kit, $type, $default);
         $armorcontent = $kit["armor"];
         $content = $kit["inventory"];
         $armor_slots = [
@@ -107,16 +181,19 @@ class KitEditor
             2 => 40,
             3 => 41
         ];
+        for ($i = 36; $i <= 53; $i++) {
+            $item = Item::get(Item::STAINED_GLASS_PANE, 15);
+            $item->setCustomName(" ")
+                ->getNamedTag()->setString("pane", "pane");
+            $content[$i] = $item;
+
+        }
         foreach ($armorcontent as $index => $armor) {
             $content[$armor_slots[$index]] = $armor;
         }
-        for ($i = 45; $i <= 53; $i++) {
-            if($i !== 48 && $i !== 49) {
-                $content[$i] = Item::get(Item::STAINED_GLASS_PANE, 15)->setCustomName(" ");
-            }
-        }
-        $content[48] = Item::get(Item::CONCRETE, 14)->setCustomName("Exit without Saving changes");
-        $content[49] = Item::get(Item::CONCRETE, 5)->setCustomName("Save changes and exit");
+        $content[48] = Item::get(Item::CONCRETE, 14)->setCustomName("§r§cExit without saving changes");
+        $content[49] = Item::get(Item::CONCRETE, 1)->setCustomName("§r§6Reset to default");
+        $content[50] = Item::get(Item::CONCRETE, 5)->setCustomName("§r§aSave changes and exit");
         $content[45] = Item::get(Item::STAINED_GLASS_PANE, 15)->setCustomName(" ");
         $content[46] = Item::get(Item::STAINED_GLASS_PANE, 15)->setCustomName("Armor ->");
         $content[51] = Item::get(Item::STAINED_GLASS_PANE, 15)->setCustomName("<- Armor");

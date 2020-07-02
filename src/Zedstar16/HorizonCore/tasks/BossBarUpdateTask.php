@@ -32,7 +32,7 @@ class BossBarUpdateTask extends Task
         if($this->i >= count(BossBarTitles::TITLES)){
             $this->i = 0;
         }
-        if($this->player == null){
+        if( $this->player->getSession() == null){
             $this->getHandler()->cancel();
         }else {
             $this->player->getSession()->getBossBar()->setSubTitle(BossBarTitles::TITLES[$this->i]);

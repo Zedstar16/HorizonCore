@@ -40,7 +40,7 @@ class BossBar
     protected $propertyManager;
 
     /**
-     * BossBarTitles constructor.
+     * BossBar constructor.
      * This will not spawn the bar, since there would be no players to spawn it to
      */
     public function __construct()
@@ -89,7 +89,7 @@ class BossBar
     public function addPlayer(Player $player): BossBar
     {
         if (isset($this->players[$player->getId()])) return $this;
-        if(!$this->getEntity() instanceof Player) $this->sendSpawnPacket([$player]);
+        if (!$this->getEntity() instanceof Player) $this->sendSpawnPacket([$player]);
         $this->sendBossPacket([$player]);
         $this->players[$player->getId()] = $player;
         return $this;
@@ -152,7 +152,7 @@ class BossBar
     public function setTitle(string $title = ""): BossBar
     {
         $this->title = $title;
-        $this->sendEntityDataPacket($this->getPlayers());
+        #$this->sendEntityDataPacket($this->getPlayers());
         $this->sendBossTextPacket($this->getPlayers());
         return $this;
     }
@@ -173,7 +173,7 @@ class BossBar
     public function setSubTitle(string $subTitle = ""): BossBar
     {
         $this->subTitle = $subTitle;
-        $this->sendEntityDataPacket($this->getPlayers());
+        #$this->sendEntityDataPacket($this->getPlayers());
         $this->sendBossTextPacket($this->getPlayers());
         return $this;
     }
@@ -197,7 +197,7 @@ class BossBar
      */
     public function setPercentage(float $percentage): BossBar
     {
-        $percentage = (float)max(0.01, $percentage);
+        $percentage = (float)max(0.0, $percentage);
         $this->getAttributeMap()->getAttribute(Attribute::HEALTH)->setValue($percentage* $this->getAttributeMap()->getAttribute(Attribute::HEALTH)->getMaxValue(), true, true);
         $this->sendAttributesPacket($this->getPlayers());
         $this->sendBossHealthPacket($this->getPlayers());
@@ -304,15 +304,17 @@ class BossBar
     }
 
     /**
+     * TODO if entity exists and is spawned, don't send again
+     * TODO slime is not needed anymore. Use player
      * @param Player[] $players
      */
     protected function sendSpawnPacket(array $players): void
     {
         $pk = new AddActorPacket();
         $pk->entityRuntimeId = $this->entityId;
-        $pk->type = $this->getEntity() instanceof Entity ? $this->getEntity()::NETWORK_ID : static::NETWORK_ID;
+        $pk->type = AddActorPacket::LEGACY_ID_MAP_BC[$this->getEntity() instanceof Entity ? $this->getEntity()::NETWORK_ID : static::NETWORK_ID];
         $pk->attributes = $this->getAttributeMap()->getAll();
-        //var_dump($this->getPropertyManager()->getAll());
+        var_dump($this->getPropertyManager()->getAll());
         $pk->metadata = $this->getPropertyManager()->getAll();
         foreach ($players as $player) {
             $pkc = clone $pk;
@@ -370,9 +372,11 @@ class BossBar
 
     /**
      * @param Player[] $players
+     *@deprecated
      */
     protected function sendEntityDataPacket(array $players): void
     {
+        return;
         $this->getPropertyManager()->setString(Entity::DATA_NAMETAG, $this->getFullTitle());
         $pk = new SetActorDataPacket();
         $pk->metadata = $this->getPropertyManager()->getDirty();

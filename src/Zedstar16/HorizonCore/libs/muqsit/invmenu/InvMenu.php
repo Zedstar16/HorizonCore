@@ -23,38 +23,41 @@ namespace Zedstar16\HorizonCore\libs\muqsit\invmenu;
 
 use Closure;
 use InvalidStateException;
+use pocketmine\inventory\transaction\action\SlotChangeAction;
+use pocketmine\item\Item;
+use pocketmine\Player;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\MenuMetadata;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerManager;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerSession;
-use pocketmine\inventory\transaction\action\SlotChangeAction;
-use pocketmine\item\Item;
-use pocketmine\Player;
 
-abstract class InvMenu implements MenuIds{
+abstract class InvMenu implements MenuIds
+{
 
-	public static function create(string $identifier) : SharedInvMenu{
-		return new SharedInvMenu(InvMenuHandler::getMenuType($identifier));
-	}
+    public static function create(string $identifier): SharedInvMenu
+    {
+        return new SharedInvMenu(InvMenuHandler::getMenuType($identifier));
+    }
 
-	/**
-	 * @deprecated Use multiple InvMenu::create() instead.
-	 * @param string $identifier
-	 * @return SessionizedInvMenu
-	 */
-	public static function createSessionized(string $identifier) : SessionizedInvMenu{
-		trigger_error("Use multiple InvMenu instances instead.", E_USER_DEPRECATED);
-		return new SessionizedInvMenu(InvMenuHandler::getMenuType($identifier));
-	}
+    /**
+     * @param string $identifier
+     * @return SessionizedInvMenu
+     * @deprecated Use multiple InvMenu::create() instead.
+     */
+    public static function createSessionized(string $identifier): SessionizedInvMenu
+    {
+        trigger_error("Use multiple InvMenu instances instead.", E_USER_DEPRECATED);
+        return new SessionizedInvMenu(InvMenuHandler::getMenuType($identifier));
+    }
 
-	/** @var MenuMetadata */
-	protected $type;
+    /** @var MenuMetadata */
+    protected $type;
 
-	/** @var bool */
-	protected $readonly = false;
+    /** @var bool */
+    protected $readonly = false;
 
-	/** @var string|null */
-	protected $name;
+    /** @var string|null */
+    protected $name;
 
 	/** @var callable|null */
 	protected $listener;

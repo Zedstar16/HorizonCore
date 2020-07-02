@@ -21,25 +21,29 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu;
 
+use pocketmine\Player;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\MenuMetadata;
-use pocketmine\Player;
 
-class SharedInvMenu extends InvMenu{
+class SharedInvMenu extends InvMenu
+{
 
-	/** @var InvMenuInventory */
-	protected $inventory;
+    /** @var InvMenuInventory */
+    protected $inventory;
 
-	public function __construct(MenuMetadata $type){
-		parent::__construct($type);
-		$this->inventory = $this->type->createInventory();
-	}
+    public function __construct(MenuMetadata $type)
+    {
+        parent::__construct($type);
+        $this->inventory = $this->type->createInventory();
+    }
 
-	public function getInventory() : InvMenuInventory{
-		return $this->inventory;
-	}
+    public function getInventory(): InvMenuInventory
+    {
+        return $this->inventory;
+    }
 
-	public function getInventoryForPlayer(Player $player) : InvMenuInventory{
-		return $this->getInventory();
-	}
+    public function getInventoryForPlayer(Player $player): InvMenuInventory
+    {
+        return $this->getInventory();
+    }
 }

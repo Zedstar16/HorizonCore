@@ -27,19 +27,19 @@ class FFAManager
     public static function getArena(string $name): ?FFA
     {
         foreach (self::$arenas as $arena) {
-            if ($arena->getName() == $name) {
+            if ($arena->getName() === $name) {
                 return $arena;
             }
         }
         return null;
     }
 
-    public static function getArenaNames()
+    public static function getArenaNames(): array
     {
         $list = array_diff(scandir(Horizon::getInstance()->getDataFolder() . "resources/ffa"), ['..', '.']);
         $names = [];
         foreach ($list as $file) {
-            $names[] = substr($file, 0, strlen($file) - 4);
+            $names[] = substr($file, 0, -4);
         }
         return $names;
     }
@@ -47,10 +47,12 @@ class FFAManager
     public static function getFFAArenaPlayers(): array
     {
         $players = [];
-        foreach (self::$arenas as $arena)
-        {
-            foreach(Server::getInstance()->getLevelByName(WorldMap::FFA()[$arena->getName()])->getPlayers() as $p){
-                $players[] = $p;
+        foreach (self::$arenas as $arena) {
+            $level = Server::getInstance()->getLevelByName(WorldMap::FFA()[$arena->getName()]);
+            if ($level !== null) {
+                foreach ($level->getPlayers() as $p) {
+                    $players[] = $p;
+                }
             }
         }
         return $players;

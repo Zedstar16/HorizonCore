@@ -1,10 +1,10 @@
 ---
-level: "world"
+level: "ffa3"
 armor:
-- 310:0:1:DEFAULT:Protection:1
-- 311:0:1:DEFAULT:Protection:1
-- 312:0:1:DEFAULT:Protection:1
-- 313:0:1:DEFAULT:Protection:1
+  - 310:0:1:&r&l&cNoDebuff &r&cHelmet:Protection:1
+  - 311:0:1:&r&l&cNoDebuff &r&cChestplate:Protection:1
+  - 312:0:1:&r&l&cNoDebuff &r&cLeggings:Protection:1
+  - 313:0:1:&r&l&cNoDebuff &r&cBoots:Protection:1
 inventory:
 - 276:0:1:&r&l&cNoDebuff &r&cSword:Sharpness:1
 - "373:16:1"

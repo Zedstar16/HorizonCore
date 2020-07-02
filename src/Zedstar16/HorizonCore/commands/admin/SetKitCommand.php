@@ -7,7 +7,6 @@ namespace Zedstar16\HorizonCore\commands\admin;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Zedstar16\HorizonCore\components\KitEditor;
-use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\managers\FileManager;
 use Zedstar16\HorizonCore\managers\KitManager;
 
@@ -25,12 +24,8 @@ class SetKitCommand extends Command
 
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-        echo 1;
         if (count($args) >= 2) {
-            echo "a";
             switch ($args[0]) {
-                case "duel":
-                    break;
                 case "ffa":
                     $kit = FileManager::getYamlData("ffa/$args[1]");
                     $kit["armor"] = KitManager::indexContents($sender->getArmorInventory()->getContents());

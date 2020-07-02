@@ -70,7 +70,7 @@ class DiverseBossBar extends BossBar
     {
         foreach ($this->getPlayers() as $player) {
             $this->resetFor($player);
-        };
+        }
         return $this;
     }
 

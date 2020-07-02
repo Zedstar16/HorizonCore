@@ -22,40 +22,44 @@ declare(strict_types=1);
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu;
 
 use InvalidArgumentException;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\DoubleBlockMenuMetadata;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\MenuMetadata;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\SingleBlockMenuMetadata;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockIds;
 use pocketmine\network\mcpe\protocol\types\WindowTypes;
 use pocketmine\plugin\Plugin;
 use pocketmine\tile\Tile;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\DoubleBlockMenuMetadata;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\MenuMetadata;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\SingleBlockMenuMetadata;
 
-final class InvMenuHandler{
+final class InvMenuHandler
+{
 
-	/** @var Plugin|null */
-	private static $registrant;
+    /** @var Plugin|null */
+    private static $registrant;
 
-	/** @var MenuMetadata[] */
-	private static $menu_types = [];
+    /** @var MenuMetadata[] */
+    private static $menu_types = [];
 
-	public static function getRegistrant() : Plugin{
-		return self::$registrant;
-	}
+    public static function getRegistrant(): Plugin
+    {
+        return self::$registrant;
+    }
 
-	public static function register(Plugin $plugin) : void{
-		if(self::isRegistered()){
-			throw new InvalidArgumentException($plugin->getName() . " attempted to register " . self::class . " twice.");
-		}
+    public static function register(Plugin $plugin): void
+    {
+        if (self::isRegistered()) {
+            throw new InvalidArgumentException($plugin->getName() . " attempted to register " . self::class . " twice.");
+        }
 
-		self::$registrant = $plugin;
-		self::registerDefaultMenuTypes();
-		$plugin->getServer()->getPluginManager()->registerEvents(new InvMenuEventHandler(), $plugin);
-	}
+        self::$registrant = $plugin;
+        self::registerDefaultMenuTypes();
+        $plugin->getServer()->getPluginManager()->registerEvents(new InvMenuEventHandler(), $plugin);
+    }
 
-	public static function isRegistered() : bool{
-		return self::$registrant instanceof Plugin;
-	}
+    public static function isRegistered(): bool
+    {
+        return self::$registrant instanceof Plugin;
+    }
 
 	private static function registerDefaultMenuTypes() : void{
 		self::registerMenuType(new SingleBlockMenuMetadata(InvMenu::TYPE_CHEST, 27, WindowTypes::CONTAINER, BlockFactory::get(BlockIds::CHEST), Tile::CHEST));

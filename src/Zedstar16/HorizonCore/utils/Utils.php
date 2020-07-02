@@ -7,8 +7,9 @@ namespace Zedstar16\HorizonCore\utils;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
-use Zedstar16\HorizonCore\components\LobbyItems\StatsForm;
+use TypeError;
 use Zedstar16\HorizonCore\Horizon;
+use Zedstar16\HorizonCore\HorizonPlayer;
 
 class Utils
 {
@@ -59,7 +60,7 @@ class Utils
         } elseif (is_string($player)) {
             $username = strtolower($player);
         } else {
-            throw new \TypeError("Expected player object or string for Stringify function");
+            throw new TypeError("Expected player object or string for Stringify function");
         }
         return $username;
     }
@@ -83,6 +84,11 @@ class Utils
             $result .= str_repeat(" ", $dist) . $line . "\n";
         }
         return $result;
+    }
+
+    public static function getReceipients(HorizonPlayer $p)
+    {
+        //if($p->)
     }
 
 

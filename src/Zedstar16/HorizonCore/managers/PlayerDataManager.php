@@ -3,10 +3,8 @@
 
 namespace Zedstar16\HorizonCore\managers;
 
-use pocketmine\Player;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\Horizon;
-use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\utils\Utils;
 
 class PlayerDataManager

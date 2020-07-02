@@ -3,14 +3,13 @@
 
 namespace Zedstar16\HorizonCore\events;
 
-
+use Zedstar16\HorizonCore\HorizonPlayer;
 
 class AddKillStreakEvent extends HorizonPlayerEvent
 {
-
-    public function __construct()
+    public function __construct(HorizonPlayer $player)
     {
-        $this->call();
+        parent::__construct($player);
     }
 
     public function getKillStreak(){

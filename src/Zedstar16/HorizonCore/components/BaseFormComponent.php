@@ -4,14 +4,14 @@
 namespace Zedstar16\HorizonCore\components;
 
 
-
 use pocketmine\Player;
+use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\libs\jojoe77777\FormAPI\SimpleForm;
 
 abstract class BaseFormComponent
 {
 
-    /** @var Player */
+    /** @var HorizonPlayer */
     public $p;
 
     public function __construct(Player $player)
@@ -20,7 +20,9 @@ abstract class BaseFormComponent
         $this->primary();
     }
 
-    public function primary()
+    abstract public function primary();
+
+    private function default()
     {
         $form = new SimpleForm(function (Player $player, $data = null) {
             if ($data === null) {
@@ -28,7 +30,7 @@ abstract class BaseFormComponent
             }
         });
         $form->setTitle("");
-        $form->setContent("Select an option");
+        $form->setContent("");
         $form->addButton("");
         $this->p->sendForm($form);
     }

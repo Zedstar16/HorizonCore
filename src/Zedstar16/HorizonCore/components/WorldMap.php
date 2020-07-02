@@ -7,21 +7,19 @@ namespace Zedstar16\HorizonCore\components;
 class WorldMap
 {
 
-    public static function FFA(){
-        return [
-            "buildpvp" => "",
-            "gapple" => "",
-            "nodebuff" => "world",
-            "fist" => "",
-            "combo" => ""
-            ];
+    public const KIT = "kit2";
 
-    }
-
-    public static function KitPvPMap(){
+    public static function FFA()
+    {
         return [
-            "kitpvp" => ""
+            "BuildPvP" => "buildpvp",
+            "Gapple" => "ffa2",
+            "nodebuff" => "ffa3",
+            "Fist" => "ffa4",
+            "Combo" => "ffa1"
         ];
+
     }
+
 
 }

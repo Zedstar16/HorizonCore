@@ -3,7 +3,7 @@
 namespace Zedstar16\HorizonCore\components\LobbyItems;
 
 use pocketmine\Player;
-use Zedstar16\HorizonCore\libs\jojoe77777\FormAPI\SimpleForm;
+use pocketmine\Server;
 
 class LobbyItems
 {
@@ -31,6 +31,9 @@ class LobbyItems
                 break;
             case "settings";
                 new SettingsForm($player);
+                break;
+            case "info":
+                Server::getInstance()->dispatchCommand($player, "info");
                 break;
         }
     }

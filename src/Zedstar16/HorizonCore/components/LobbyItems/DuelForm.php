@@ -31,19 +31,27 @@ class DuelForm extends BaseFormComponent
         $form->setContent("Select an option");
         $form->addButton("Duels Queue");
         $form->addButton("Duel a Player");
-        $form->addButton("Duel a Bot");
         $this->p->sendForm($form);
     }
 
     public function duelPlayer($failed = false, $username = "")
     {
         $form = new CustomForm(function (Player $player, $data = null) {
-            if (is_string($data["label"])) {
-
+            if ($data === null) {
+                return;
+            }
+            if (isset($data[0]) && is_string($data[0])) {
+                $p = Server::getInstance()->getPlayer($data[0]);
+                if ($p == null) {
+                    $this->duelPlayer(true, $data[0]);
+                } else {
+                    Server::getInstance()->dispatchCommand($player, "duel $data[0]");
+                }
             }
         });
         $form->setTitle("Duels");
-        $form->addInput("Enter Username of the player you wish to duel", "Username", "", "label");
+        $text = $failed ? "§c$username is not online§f\n\nEnter Username of the player you wish to duel" : "Enter Username of the player you wish to duel";
+        $form->addInput($text, "Username");
         $this->p->sendForm($form);
     }
 

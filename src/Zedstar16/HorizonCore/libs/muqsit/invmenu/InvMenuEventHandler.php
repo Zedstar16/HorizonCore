@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu;
 
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerManager;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -29,6 +28,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\network\mcpe\protocol\NetworkStackLatencyPacket;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerManager;
 
 class InvMenuEventHandler implements Listener{
 

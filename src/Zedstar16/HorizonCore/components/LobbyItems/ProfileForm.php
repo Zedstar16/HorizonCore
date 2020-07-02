@@ -8,14 +8,12 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 use Zedstar16\HorizonCore\components\BaseFormComponent;
 use Zedstar16\HorizonCore\libs\jojoe77777\FormAPI\SimpleForm;
-use Zedstar16\HorizonCore\managers\ExperienceManager;
 
 class ProfileForm extends BaseFormComponent
 {
 
     public function primary()
     {
-        $content = "";
         $form = new SimpleForm(function (Player $player, $data = null) {
             if ($data === null) {
                 return;
@@ -37,10 +35,10 @@ class ProfileForm extends BaseFormComponent
 
     public function getXPBarString()
     {
-        $p = $this->p;
-        $lvl = ExperienceManager::calculateLevel($this->p);
-        $current_level_experience = ExperienceManager::getExperience($p) - ExperienceManager::calculateLevelExperience($lvl);
-        $xp_to_next_level = ExperienceManager::calculateLevelExperience($lvl + 1) - ExperienceManager::calculateLevelExperience($lvl);
+        $xp = $this->p->getExperience();
+        $lvl = $xp->calculateLevel();
+        $current_level_experience = $xp->getExperience() - $xp->calculateLevelExperience($lvl);
+        $xp_to_next_level = $xp->calculateLevelExperience($lvl + 1) - $xp->calculateLevelExperience($lvl);
         $progress_done = round($current_level_experience / $xp_to_next_level, 2);
         $progress_todo = 1 - $progress_done;
         $done = str_repeat("§a|", (int)($progress_done * 40));

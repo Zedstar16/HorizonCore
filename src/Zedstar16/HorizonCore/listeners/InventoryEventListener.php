@@ -9,9 +9,7 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
-use pocketmine\inventory\PlayerInventory;
 use Zedstar16\HorizonCore\HorizonPlayer;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 
 class InventoryEventListener implements Listener
 {
@@ -49,30 +47,34 @@ class InventoryEventListener implements Listener
 
     public function onDrop(PlayerDropItemEvent $event)
     {
-        $item = $event->getItem();
-        if ($item->getNamedTag()->hasTag("chest")) {
-            $event->setCancelled();
-        }
         $p = $event->getPlayer();
-        if(!$event->isCancelled()) {
-            if ($p instanceof HorizonPlayer) {
+        $item = $event->getItem();
+        if ($p instanceof HorizonPlayer) {
+            if ($item->getNamedTag()->hasTag("chest") or $p->isInPracticeZone()) {
+                $event->setCancelled();
+            }
+            $p = $event->getPlayer();
+            if (!$event->isCancelled()) {
+
                 $p->getSession()->incrementValue("items_dropped");
             }
         }
     }
 
-    public function onPickUp(InventoryPickupItemEvent $event){
-       $viewers = $event->getInventory()->getViewers();
-       foreach ($viewers as $player){
-           if($player instanceof HorizonPlayer && !$event->isCancelled()){
-               $player->getSession()->incrementValue("items_picked_up");
-           }
-       }
+    public function onPickUp(InventoryPickupItemEvent $event)
+    {
+        $viewers = $event->getInventory()->getViewers();
+        foreach ($viewers as $player) {
+            if ($player instanceof HorizonPlayer && !$event->isCancelled()) {
+                $player->getSession()->incrementValue("items_picked_up");
+            }
+        }
     }
 
-    public function onConsume(PlayerItemConsumeEvent $event){
+    public function onConsume(PlayerItemConsumeEvent $event)
+    {
         $p = $event->getPlayer();
-        if(!$event->isCancelled()) {
+        if (!$event->isCancelled()) {
             if ($p instanceof HorizonPlayer) {
                 $p->getSession()->incrementValue("items_consumed");
             }

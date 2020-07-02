@@ -24,34 +24,36 @@ namespace Zedstar16\HorizonCore\libs\muqsit\invmenu\session;
 use Closure;
 use InvalidArgumentException;
 use InvalidStateException;
+use pocketmine\network\mcpe\protocol\types\ContainerIds;
+use pocketmine\Player;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenu;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenuHandler;
-use pocketmine\network\mcpe\protocol\types\ContainerIds;
-use pocketmine\Player;
 
-class PlayerSession{
+class PlayerSession
+{
 
-	/** @var Player */
-	protected $player;
+    /** @var Player */
+    protected $player;
 
-	/** @var PlayerNetwork */
-	protected $network;
+    /** @var PlayerNetwork */
+    protected $network;
 
-	/** @var MenuExtradata */
-	protected $menu_extradata;
+    /** @var MenuExtradata */
+    protected $menu_extradata;
 
-	/** @var InvMenu|null */
-	protected $current_menu;
+    /** @var InvMenu|null */
+    protected $current_menu;
 
-	/** @var int */
-	protected $current_window_id = ContainerIds::NONE;
+    /** @var int */
+    protected $current_window_id = ContainerIds::NONE;
 
-	public function __construct(Player $player){
-		$this->player = $player;
-		$this->network = new PlayerNetwork($player);
-		$this->menu_extradata = new MenuExtradata();
-	}
+    public function __construct(Player $player)
+    {
+        $this->player = $player;
+        $this->network = new PlayerNetwork($player);
+        $this->menu_extradata = new MenuExtradata();
+    }
 
 	/**
 	 * @internal

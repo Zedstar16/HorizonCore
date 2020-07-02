@@ -17,9 +17,10 @@ class KitManager
     public static function parseItem(string $string): Item
     {
         $data = explode(":", $string);
-        $id = $data[0];
-        $damage = $data[1];
-        $count = $data[2];
+        print_r($data);
+        $id = (int)$data[0];
+        $damage = (int)$data[1];
+        $count = (int)$data[2];
         $item = ItemFactory::get($id, $damage, $count);
         if (isset($data[3])) {
             if ($data[3] !== "DEFAULT") {
@@ -27,7 +28,7 @@ class KitManager
             }
             if (isset($data[4])) {
                 $data = array_slice($data, 4);
-                for ($i = 0; $i < count($data); $i++) {
+                for ($i = 0, $iMax = count($data); $i < $iMax; $i++) {
                     if (is_int($i / 2)) {
                         $enchant = Enchantment::getEnchantmentByName($data[$i]);
                         $instance = new EnchantmentInstance($enchant, $data[$i + 1]);
@@ -88,9 +89,9 @@ class KitManager
     public static function saveCustomKit(Player $player, $kit, $type, $data){
         $contents = [];
         $type = Constants::$kit[$type];
-        $playerdata = FileManager::getJsonData("players/".$player->getLowerCaseName());
+        $playerdata = FileManager::getJsonData("players/" . $player->getLowerCaseName());
         $playerdata["customkits"][$type][$kit] = $data;
-        FileManager::saveJsonData("players/".$player->getLowerCaseName(), $playerdata);
+        FileManager::saveJsonData("players/" . $player->getLowerCaseName(), $playerdata);
         return $contents;
     }
 

@@ -27,6 +27,7 @@ class CPS
 
     public static function calculateCPS(Player $p): int
     {
+        self::addClick($p);
         $name = $p->getName();
         $time = microtime(true);
         $cps = 0;

@@ -21,10 +21,10 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata;
 
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\MenuExtradata;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\MenuExtradata;
 
 class DoubleBlockMenuMetadata extends SingleBlockMenuMetadata{
 

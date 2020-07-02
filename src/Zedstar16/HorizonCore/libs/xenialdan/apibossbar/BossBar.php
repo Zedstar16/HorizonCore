@@ -3,6 +3,7 @@
 
 namespace Zedstar16\HorizonCore\libs\xenialdan\apibossbar;
 
+use InvalidArgumentException;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\AttributeMap;
 use pocketmine\entity\DataPropertyManager;
@@ -78,7 +79,7 @@ class BossBar
     {
         foreach ($players as $player) {
             $this->addPlayer($player);
-        };
+        }
         return $this;
     }
 
@@ -120,7 +121,7 @@ class BossBar
     {
         foreach ($players as $player) {
             $this->removePlayer($player);
-        };
+        }
         return $this;
     }
 
@@ -272,7 +273,7 @@ class BossBar
      */
     public function setEntity(?Entity $entity = null): BossBar
     {
-        if ($entity instanceof Entity && ($entity->isClosed() || $entity->isFlaggedForDespawn())) throw new \InvalidArgumentException("Entity $entity can not be used since its not valid anymore (closed or flagged for despawn)");
+        if ($entity instanceof Entity && ($entity->isClosed() || $entity->isFlaggedForDespawn())) throw new InvalidArgumentException("Entity $entity can not be used since its not valid anymore (closed or flagged for despawn)");
         if ($this->getEntity() instanceof Entity && !$entity instanceof Player) $this->getEntity()->flagForDespawn();
         else {
             $pk = new RemoveActorPacket();
@@ -314,7 +315,6 @@ class BossBar
         $pk->entityRuntimeId = $this->entityId;
         $pk->type = AddActorPacket::LEGACY_ID_MAP_BC[$this->getEntity() instanceof Entity ? $this->getEntity()::NETWORK_ID : static::NETWORK_ID];
         $pk->attributes = $this->getAttributeMap()->getAll();
-        var_dump($this->getPropertyManager()->getAll());
         $pk->metadata = $this->getPropertyManager()->getAll();
         foreach ($players as $player) {
             $pkc = clone $pk;

@@ -3,7 +3,6 @@
 
 namespace Zedstar16\HorizonCore\components;
 
-use pocketmine\block\utils\ColorBlockMetaHelper;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
@@ -11,7 +10,6 @@ use pocketmine\Player;
 use Zedstar16\HorizonCore\libs\jojoe77777\FormAPI\SimpleForm;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenu;
-use Zedstar16\HorizonCore\managers\FileManager;
 use Zedstar16\HorizonCore\managers\KitManager;
 use Zedstar16\HorizonCore\utils\Utils;
 
@@ -106,7 +104,6 @@ class KitEditor
     public function openKitEditor($kit, $type)
     {
         $menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
-        $menu->readonly(false);
         $playerinventory = $this->p->getInventory()->getContents();
         $menu->setListener(function (Player $player, Item $itemClicked, Item $itemClickedWith, SlotChangeAction $action) use ($playerinventory, $menu, $kit, $type) {
             if (!in_array($itemClicked, $menu->getInventory()->getContents()) or in_array($itemClickedWith, $playerinventory)) {
@@ -154,7 +151,6 @@ class KitEditor
     public function saveContents($player, $kit, $type, $contents)
     {
         $data = [];
-        print_r($contents);
         foreach ($contents as $key => $item) {
             if ($item->getNamedTagEntry("chest") == null) {
                 unset($data[$key][array_keys($data[$key], $item)[0]]);

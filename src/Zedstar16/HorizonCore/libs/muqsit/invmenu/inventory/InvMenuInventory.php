@@ -21,41 +21,47 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory;
 
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\MenuMetadata;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerManager;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerSession;
 use pocketmine\inventory\ContainerInventory;
 use pocketmine\level\Position;
 use pocketmine\Player;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata\MenuMetadata;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerManager;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\PlayerSession;
 
-class InvMenuInventory extends ContainerInventory{
+class InvMenuInventory extends ContainerInventory
+{
 
-	/** @var MenuMetadata */
-	private $menu_metadata;
+    /** @var MenuMetadata */
+    private $menu_metadata;
 
-	public function __construct(MenuMetadata $menu_metadata){
-		$this->menu_metadata = $menu_metadata;
-		parent::__construct(new Position(), [], $menu_metadata->getSize());
-	}
+    public function __construct(MenuMetadata $menu_metadata)
+    {
+        $this->menu_metadata = $menu_metadata;
+        parent::__construct(new Position(), [], $menu_metadata->getSize());
+    }
 
-	public function moveTo(int $x, int $y, int $z) : void{
-		$this->holder->setComponents($x, $y, $z);
-	}
+    public function moveTo(int $x, int $y, int $z): void
+    {
+        $this->holder->setComponents($x, $y, $z);
+    }
 
-	final public function getMenuMetadata() : MenuMetadata{
-		return $this->menu_metadata;
-	}
+    final public function getMenuMetadata(): MenuMetadata
+    {
+        return $this->menu_metadata;
+    }
 
-	final public function getName() : string{
-		// The value of this does not ALTER the title of the inventory.
-		// Use InvMenu::setName() to set the inventory's name, or supply the
-		// name parameter in InvMenu::send().
-		return $this->menu_metadata->getIdentifier();
-	}
+    final public function getName(): string
+    {
+        // The value of this does not ALTER the title of the inventory.
+        // Use InvMenu::setName() to set the inventory's name, or supply the
+        // name parameter in InvMenu::send().
+        return $this->menu_metadata->getIdentifier();
+    }
 
-	public function getDefaultSize() : int{
-		return $this->menu_metadata->getSize();
-	}
+    public function getDefaultSize(): int
+    {
+        return $this->menu_metadata->getSize();
+    }
 
 	public function getNetworkType() : int{
 		return $this->menu_metadata->getWindowType();

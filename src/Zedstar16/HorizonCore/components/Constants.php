@@ -19,9 +19,17 @@ namespace Zedstar16\HorizonCore\components;
 class Constants
 {
 
+    public const MAX_DASH_IN_FORM = 32;
+
     public const KIT_NORMAL = 0;
     public const KIT_FFA = 1;
     public const KIT_DUELS = 2;
+
+    public const GAMEMODE_KITPVP = 0;
+    public const GAMEMODE_FFA = 1;
+    public const GAMEMODE_DUELS = 2;
+    public const GAMEMODE_SPAWN = 3;
+
 
     public static $kit = [
         self::KIT_NORMAL => "kits",

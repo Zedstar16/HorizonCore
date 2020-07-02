@@ -4,7 +4,6 @@
 namespace Zedstar16\HorizonCore\managers;
 
 
-use pocketmine\Server;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\session\Session;
@@ -29,13 +28,13 @@ class SessionManager
     public static function remove(HorizonPlayer $player){
         $session = self::getSession($player);
         $session_data = $session->getSessionStats();
+     //   var_dump($session_data);
         $player_data = PlayerDataManager::getData($player);
         foreach($session_data as $key => $value){
             $player_data[$key] += $value;
         }
         PlayerDataManager::saveData($player, $player_data);
-        unset(self::$sessions[$player->getName()]);
-        unset($session);
+        unset(self::$sessions[$player->getName()], $session);
     }
 
 }

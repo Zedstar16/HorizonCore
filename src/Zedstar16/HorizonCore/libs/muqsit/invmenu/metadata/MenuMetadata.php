@@ -21,37 +21,42 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata;
 
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\MenuExtradata;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\MenuExtradata;
 
-abstract class MenuMetadata{
+abstract class MenuMetadata
+{
 
-	/** @var string */
-	protected $identifier;
+    /** @var string */
+    protected $identifier;
 
-	/** @var int */
-	protected $size;
+    /** @var int */
+    protected $size;
 
-	/** @var int */
-	protected $window_type;
+    /** @var int */
+    protected $window_type;
 
-	public function __construct(string $identifier, int $size, int $window_type){
-		$this->identifier = $identifier;
-		$this->size = $size;
-		$this->window_type = $window_type;
-	}
+    public function __construct(string $identifier, int $size, int $window_type)
+    {
+        $this->identifier = $identifier;
+        $this->size = $size;
+        $this->window_type = $window_type;
+    }
 
-	public function getIdentifier() : string{
-		return $this->identifier;
-	}
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
 
-	public function getSize() : int{
-		return $this->size;
-	}
+    public function getSize(): int
+    {
+        return $this->size;
+    }
 
-	public function getWindowType() : int{
+    public function getWindowType(): int
+    {
 		return $this->window_type;
 	}
 

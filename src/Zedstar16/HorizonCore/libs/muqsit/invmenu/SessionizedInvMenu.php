@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu;
 
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 use pocketmine\Player;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\inventory\InvMenuInventory;
 
 class SessionizedInvMenu extends InvMenu{
 

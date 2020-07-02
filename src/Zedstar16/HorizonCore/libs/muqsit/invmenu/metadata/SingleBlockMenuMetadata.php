@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Zedstar16\HorizonCore\libs\muqsit\invmenu\metadata;
 
-use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\MenuExtradata;
 use pocketmine\block\Block;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
@@ -31,6 +30,7 @@ use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\Player;
 use pocketmine\tile\Nameable;
 use pocketmine\tile\Tile;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\session\MenuExtradata;
 
 class SingleBlockMenuMetadata extends MenuMetadata{
 

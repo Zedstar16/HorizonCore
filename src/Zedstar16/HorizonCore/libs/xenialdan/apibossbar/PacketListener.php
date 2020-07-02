@@ -2,6 +2,7 @@
 
 namespace Zedstar16\HorizonCore\libs\xenialdan\apibossbar;
 
+use InvalidArgumentException;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
@@ -48,7 +49,7 @@ class PacketListener implements Listener
 
     private function onBossEventPacket(DataPacketReceiveEvent $e)
     {
-        if (!($pk = $e->getPacket()) instanceof BossEventPacket) throw new \InvalidArgumentException(get_class($e->getPacket()) . " is not a " . BossEventPacket::class);
+        if (!($pk = $e->getPacket()) instanceof BossEventPacket) throw new InvalidArgumentException(get_class($e->getPacket()) . " is not a " . BossEventPacket::class);
         /** @var BossEventPacket $pk */
         switch ($pk->eventType) {
             case BossEventPacket::TYPE_REGISTER_PLAYER:

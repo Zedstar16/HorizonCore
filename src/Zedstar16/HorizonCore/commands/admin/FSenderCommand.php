@@ -24,15 +24,15 @@ class FSenderCommand extends Command
 
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-            if ($sender instanceof RemoteConsoleCommandSender) {
-                if (count($args) >= 2) {
-                    $username = $args[0];
-                    array_shift($args);
-                    $command = implode(" ", $args);
-                    $sender = new FakeCommandSender($username, $sender);
-                    Server::getInstance()->dispatchCommand($sender, $command);
-                }
-            }else $sender->sendMessage("You're not meant to be using this command... so don;t even try");
+        if ($sender instanceof RemoteConsoleCommandSender) {
+            if (count($args) >= 2) {
+                $username = $args[0];
+                array_shift($args);
+                $command = implode(" ", $args);
+                $sender = new FakeCommandSender($username, $sender);
+                Server::getInstance()->dispatchCommand($sender, $command);
+            }
+        } else $sender->sendMessage("You're not meant to be using this command... so don;t even try");
 
     }
 

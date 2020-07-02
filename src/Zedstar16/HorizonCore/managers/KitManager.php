@@ -88,9 +88,9 @@ class KitManager
     public static function saveCustomKit(Player $player, $kit, $type, $data){
         $contents = [];
         $type = Constants::$kit[$type];
-        $playerdata = FileManager::getJsonData("players/".$player->getLowerCaseName());
+        $playerdata = DatabaseManager::getPlayerData($player->getLowerCaseName());
         $playerdata["customkits"][$type][$kit] = $data;
-        FileManager::saveJsonData("players/".$player->getLowerCaseName(), $playerdata);
+        DatabaseManager::savePlayerData($player->getLowerCaseName(), $playerdata);
         return $contents;
     }
 

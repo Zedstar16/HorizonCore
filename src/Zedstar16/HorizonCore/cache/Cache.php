@@ -4,6 +4,7 @@
 namespace Zedstar16\HorizonCore\cache;
 
 
+use Zedstar16\HorizonCore\managers\DatabaseManager;
 use Zedstar16\HorizonCore\managers\FileManager;
 
 class Cache
@@ -14,7 +15,7 @@ class Cache
 
     public static function write(){
         foreach(self::$altered as $username){
-            FileManager::saveJsonData("players/$username", self::$data[$username]);
+            DatabaseManager::savePlayerData($username, self::$data[$username]);
             unset(self::$altered[$username]);
         }
     }

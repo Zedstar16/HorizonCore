@@ -18,13 +18,13 @@ class PlayerDataManager
         if (!self::isRegistered($player)) {
             self::init(Horizon::getPlayer($player));
         }
-        return FileManager::getJsonData("players/$player");
+        return DatabaseManager::getPlayerData($player);
     }
 
     public static function saveData($player, array $data)
     {
         $player = Utils::stringify($player);
-        FileManager::saveJsonData("players/" . $player, $data);
+        DatabaseManager::savePlayerData($player, $data);
     }
 
     public static function isRegistered($player)
@@ -76,7 +76,7 @@ class PlayerDataManager
                     "timestamp" => ""
                 ]
             ];
-            FileManager::saveJsonData("players/" . $playername, $data);
+            DatabaseManager::savePlayerData($playername, $data);
         }
     }
 

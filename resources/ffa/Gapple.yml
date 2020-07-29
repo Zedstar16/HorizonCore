@@ -1,0 +1,10 @@
+---
+level: "ffa2"
+armor:
+  - 310:0:1:&r&l&6Gapple&r&6 Helmet
+  - 311:0:1:&r&l&6Gapple&r&6 Chestplate
+  - 312:0:1:&r&l&6Gapple&r&6 Leggings
+  - 313:0:1:&r&l&6Gapple&r&6 Boots
+inventory:
+  - 276:0:1:&r&l&6Gapple&r&6 Sword
+...

@@ -1,0 +1,14 @@
+---
+level: "ffa1"
+armor:
+  - 306:0:1:&r&l&bCombo &r&bHelmet:Unbreaking:2
+  - 307:0:1:&r&l&bCombo &r&bChestplate:Unbreaking:2
+  - 308:0:1:&r&l&bCombo &r&bLeggings:Unbreaking:2
+  - 309:0:1:&r&l&bCombo &r&bBoots:Unbreaking:2
+inventory:
+  0: 364:0:64
+  2: 306:0:1:&r&l&bCombo &r&bHelmet:Unbreaking:2
+  3: 307:0:1:&r&l&bCombo &r&bChestplate:Unbreaking:2
+  4: 308:0:1:&r&l&bCombo &r&bLeggings:Unbreaking:2
+  5: 309:0:1:&r&l&bCombo &r&bBoots:Unbreaking:2
+...

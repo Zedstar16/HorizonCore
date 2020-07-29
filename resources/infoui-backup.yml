@@ -1,0 +1,44 @@
+button1:
+  content: "Select a sub catergory"
+  sub:
+    content: "Hello Welcome to sub"
+    1sub2:
+      content: "lol"
+    2sub2:
+      content: "lol"
+      1sub3:
+        content: "lol"
+      2sub3:
+        content: "lol"
+  2sub:
+    content: "Hello Welcome to sub2"
+    1sub2:
+      content: "lol2"
+    2sub2:
+      content: "lol2"
+      1sub3:
+        content: "lol2"
+      2sub3:
+        content: "lol2"
+  3sub:
+    content: "Hello Welcome to sub3"
+    1sub2:
+      content: "lol3"
+    2sub2:
+      content: "lol3"
+      1sub3:
+        content: "lol3"
+      2sub3:
+        content: "lol3"
+button2:
+  content: "Select a sub catergory"
+  sub:
+    content: "Hello Welcome to sub"
+    1sub2:
+      content: "lol"
+    2sub2:
+      content: "lol"
+      1sub3:
+        content: "lol"
+      2sub3:
+        content: "lol"

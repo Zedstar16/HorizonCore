@@ -1,0 +1,22 @@
+button1:
+  content: "Select a sub catergory"
+  sub:
+    content: "Hello Welcome to sub"
+    1sub2:
+      content: "lol"
+    2sub2:
+      content: "lol"
+      1sub3:
+        content: "lol"
+      2sub3:
+        content: "lol"
+Key Links:
+  content: "§9Website: §bwww.horizonpe.net\n§6Discord: §ediscord.horizonpe.net\n§6Shop: §eshop.horizonpe.net\n§6Vote: §evote.horizonpe.net"
+How to play:
+  content: "§c> §eHorizon is a server that integrates the KitPvP and Practice gamemode into one\n\n§c> §eYou can play the practice gamemodes by using the items in your inventoru at spawn, If you would like to play kitpvp simply leave the spawn and you will equip your KitPvP Inventory"
+Gamemodes:
+  content: "Select a sub catergory"
+  KitPvP:
+    content: "§c> §eThe KitPvP gamemode is accessible when you leave the spawn circle\n§c> §eKitPvP is a mixed kit Free For All, 2v1ing is not prohibited, you can also use all your fun items in here"
+  Practice:
+    content: "§c> §eAccess to the practice gamemodes is possible by using the items in your inventory when you spawn in\n§c> §ePractice is desgined to be balanced with everyone having the same kits, 2v1ing is prevented"

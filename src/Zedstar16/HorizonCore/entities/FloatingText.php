@@ -15,11 +15,12 @@ class FloatingText extends Zombie
 
     public function __construct(Level $level, CompoundTag $nbt, $tag = "", $text = "")
     {
+        parent::__construct($level, $nbt);
+        $this->namedtag->setString($tag, $tag);
         $this->setScale(0.01);
         $this->setNameTagAlwaysVisible(true);
+        $this->setInvisible(false);
         $this->setNameTag($text);
-        $this->namedtag->setString($tag, $tag);
-        parent::__construct($level, $nbt);
     }
 
     public function setText(string $text)

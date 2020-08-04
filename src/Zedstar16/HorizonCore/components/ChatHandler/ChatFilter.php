@@ -16,41 +16,26 @@ class ChatFilter
 
     public function __construct(string $message)
     {
-        $this->msg = $message;
+        $this->msg = strtolower($message);
     }
 
     public function getCleanedMessage(): string
     {
-        $result = "there is an array which has some words";
-
-        $bad = array("array", "of", "bad", "words");
-        foreach ($bad as $vb) {
-            $swear = "";
-            foreach (str_split($vb) as $inx => $letter) {
-                if ($inx) {
-                    $swear .= "(\W*|\w){0,3}" . $letter;
-                } else {
-                    $swear .= $letter;
-                }
-            }
-            $result = preg_replace("/$swear/i", "hi", $result);
-        }
-
-        $string = "you are a fu(kking cunt kys";
-        $char_list = str_split("abcdefghijklmnopqrstuvwxyz1234567890-/:;()£&@“–—•₽¥¢€₩§„»«…¿¡'’‘`[]{}#‰%^*+≠≈_|~<>•");
-        $split = str_split($string);
+        $i = 0;
+        $bool = false;
+        $time = microtime(true);
+        $char_list = str_split("abcdefghijklmnopqrstuvwxyz1234567890-/:;()£&@“–—•₽¥¢€₩§„»«…¿¡'’‘`[]{}#‰%^*+≠≈_|~<>• ");
+        $split = str_split($this->msg);
         $possibles = [
-            "a" => ["4"],
-            "i" => ["!", "¡", "|"],
+            "a" => ["4", "@"],
+            "i" => ["!", "¡", "|", "1", "l", "/", "\\"],
             "o" => ["0", "()", "•", "<>"],
             "e" => ["3", "€"],
-            "c" => ["(", "<", "[", "{"]
+            "c" => ["(", "<", "[", "{"],
+            "g" => ["q", "9", "6", "k", "b"],
+            "s" => ["5"],
+            "b" => ["8"]
         ];
-        $letters = [];
-        foreach ($char_list as $chars) {
-
-        }
-
         foreach ($split as $char) {
             if (!in_array($char, $char_list, true)) {
                 $this->cansend = false;
@@ -58,18 +43,17 @@ class ChatFilter
             }
             foreach ($possibles as $key => $possible) {
                 foreach ($possible as $replacement) {
-                    $this->checkStandardSwear(str_replace($replacement, $possible, $this->msg));
-
+                    $this->checkStandardSwear(str_replace($replacement, $key, $this->msg));
                 }
             }
         }
-        return "";
+        return round(microtime(true) - $time, 5) * 1000;
     }
 
     private function checkStandardSwear(string $string): bool
     {
         $bool = false;
-        $bad = array("array", "of", "bad", "words");
+        $bad = ["cunt", "fuck", "shit", "nigga", "kys", "nigger", "retard"];
         foreach ($bad as $vb) {
             $swear = "";
             foreach (str_split($vb) as $inx => $letter) {
@@ -86,6 +70,4 @@ class ChatFilter
         }
         return $bool;
     }
-
-
 }

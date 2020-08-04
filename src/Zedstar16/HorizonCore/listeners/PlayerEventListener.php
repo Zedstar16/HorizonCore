@@ -21,6 +21,8 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\CommandEvent;
+use pocketmine\level\particle\FlameParticle;
+use pocketmine\math\Vector3;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\components\CPS;
@@ -224,6 +226,10 @@ class PlayerEventListener implements Listener
         if ($key !== false) {
             unset($koth->cap_data[$key]);
         }
+        $key2 = array_search($name, $koth->players_in_koth, true);
+        if ($key2 !== false) {
+            unset($koth->players_in_koth[$key2]);
+        }
         if ($name === $koth->current_capper) {
             $koth->handleCapperLeave();
         }
@@ -231,9 +237,11 @@ class PlayerEventListener implements Listener
 
     public function onXPGain(AddXPEvent $event)
     {
+        $p = $event->getPlayer();
         $xp = $event->getExperience();
-        $event->getPlayer()->setXpLevel($xp->getLevel());
-        $event->getPlayer()->setXpProgress($xp->calculatePercentageProgression());
+        $p->setXpLevel($xp->getLevel());
+        $p->setXpProgress($xp->calculatePercentageProgression());
+        //   $p->getSession()->getScoreboard()->updateLine();
     }
 
     public function onJoin(PlayerJoinEvent $event)
@@ -353,10 +361,22 @@ class PlayerEventListener implements Listener
             }
             $koth = KothGameManager::getCurrentGame();
             if ($koth !== null) {
-                if ($koth->isInsideArena($to) && !$koth->isInsideArena($from)) {
-                    new PlayerEnterKothEvent($p, $koth);
-                } elseif (!$koth->isInsideArena($to) && $koth->isInsideArena($from)) {
-                    new PlayerLeaveKothEvent($p, $koth);
+                $a = $koth->aabb;
+                $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->minX, $a->minY, $a->minZ)));
+                $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->minX, $a->maxY, $a->minZ)));
+                $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->minX, $a->maxY, $a->maxZ)));
+                $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->maxX, $a->minY, $a->minZ)));
+                $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->maxX, $a->maxY, $a->minZ)));
+                $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->maxX, $a->maxY, $a->maxZ)));
+                var_dump($koth->isInsideArena($to));
+                if ($koth->active) {
+                    if ($koth->isInsideArena($to) && !$koth->isInsideArena($from)) {
+                        var_dump($koth);
+                        new PlayerEnterKothEvent($p, $koth);
+                    } elseif (!$koth->isInsideArena($to) && $koth->isInsideArena($from)) {
+                        var_dump($koth);
+                        new PlayerLeaveKothEvent($p, $koth);
+                    }
                 }
             }
         }

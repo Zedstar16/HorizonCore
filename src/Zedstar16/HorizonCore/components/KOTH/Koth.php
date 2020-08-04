@@ -41,8 +41,9 @@ class Koth
 
     public function __construct(Server $server)
     {
+        echo "started";
         $this->s = $server;
-        $this->baseTick = 0;
+        $this->baseTick = -1;
         $pos = Horizon::Config()["kothcenter"];
         $c = new Position($pos["x"], $pos["y"], $pos["z"], Server::getInstance()->getLevelByName(WorldMap::KIT));
         $this->aabb = new AxisAlignedBB($c->x - 4, $c->y, $c->z - 4, $c->x + 4, $c->y + 4, $c->z + 4);
@@ -66,16 +67,18 @@ class Koth
         } elseif ($this->baseTick === 45) {
             $this->s->broadcastMessage("[Horizon] New KOTH event is starting in 15 seconds");
         } elseif ($this->baseTick === 60) {
-            $this->s->broadcastMessage("[Horizon] New KOTH event has started!");
-        } elseif ($this->baseTick === 900) {
+            $this->start();
+        } elseif ($this->baseTick === 120) {
+            $this->active = false;
             if ($this->current_capper === null) {
                 $this->s->broadcastMessage("[Horizon] KOTH event finished with no winners");
                 $this->finish();
             } else $this->finish($this->current_capper);
         }
         if ($this->current_capper !== null) {
+            $this->current_capper->sendPopup("Capturing: " . gmdate("i:s", $this->current_cap_time));
             $this->current_cap_time++;
-            if ($this->current_cap_time >= 45) {
+            if ($this->current_cap_time >= 30) {
                 $this->finish($this->current_capper);
             } else $this->current_capper->sendTip("Capturing: " . abs($this->current_cap_time - 45));
         }

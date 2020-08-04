@@ -3,17 +3,17 @@
 
 namespace Zedstar16\HorizonCore\listeners;
 
-use pocketmine\event\level\ChunkUnloadEvent;
+use pocketmine\event\level\LevelLoadEvent;
+use pocketmine\event\level\LevelUnloadEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\PlayerActionPacket;
-use Zedstar16\HorizonCore\events\HorizonEvent;
 use Zedstar16\HorizonCore\events\PlayerClickEvent;
 use Zedstar16\HorizonCore\Horizon;
+use Zedstar16\HorizonCore\managers\FloatingTextManager;
 
 class NetworkListener implements Listener
 {
@@ -41,17 +41,15 @@ class NetworkListener implements Listener
         }
     }
 
-    public function HZ(HorizonEvent $e)
+    public function onLevelLoad(LevelLoadEvent $event)
     {
-        //    var_dump($e->getHorizon()->getDataFolder());
+        FloatingTextManager::loadIn($event->getLevel());
     }
-    /*
-        public function onChonk(ChunkUnloadEvent $event){
-            echo "A";
-         //   $event->getLevel()->loadChunk($event->getChunk()->getX(), $event->getChunk()->getZ());
-            $event->setCancelled();
-        }
-    */
+
+    public function onLevelUnload(LevelUnloadEvent $event)
+    {
+        FloatingTextManager::unload($event->getLevel());
+    }
 
 
 }

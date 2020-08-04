@@ -17,6 +17,7 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\cache\Cache;
 use Zedstar16\HorizonCore\entities\FireworksRocket;
+use Zedstar16\HorizonCore\entities\FloatingText;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenuHandler;
 use Zedstar16\HorizonCore\libs\xenialdan\apibossbar\API;
 use Zedstar16\HorizonCore\listeners\EntityEventListener;
@@ -42,6 +43,8 @@ class Horizon extends PluginBase implements Listener
 
     public const prefix = "§7[§6Horizon§cPE§7]";
 
+    public $lines = 0;
+
     public function onEnable(): void
     {
         self::$instance = $this;
@@ -63,6 +66,28 @@ class Horizon extends PluginBase implements Listener
         Item::initCreativeItems();
         if (!Entity::registerEntity(FireworksRocket::class, false, ["ZedRPG"])) {
             $this->getLogger()->error("Failed to register ZedRPG entity with savename 'ZedRPG'");
+        }
+        Entity::registerEntity(FloatingText::class);
+        $bad = ["cunt", "fuck", "shit", "nigga", "kys", "nigger"];
+        // $c = new ChatFilter("n1i1i1i1i1gggg3333eeeerrrrrrrr");
+        //     $c->getCleanedMessage();
+        //   $this->getLines("plugins/HorizonCore/src/Zedstar16/HorizonCore/");
+    }
+
+    public function getLines($path)
+    {
+        $i = new DirectoryIterator($path);
+        foreach ($i as $item) {
+            if (!$i->isDot()) {
+                if ($i->isDir()) {
+                    if ($i->getFilename() === "libs") {
+                        return;
+                    }
+                    $this->getLines($i->getRealPath());
+                } else {
+                    $this->lines += count(explode("\n", file_get_contents($item->getRealPath())));
+                }
+            }
         }
     }
 

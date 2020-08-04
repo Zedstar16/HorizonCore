@@ -7,6 +7,7 @@ namespace Zedstar16\HorizonCore\utils;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
+use Throwable;
 use TypeError;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\HorizonPlayer;
@@ -89,6 +90,11 @@ class Utils
     public static function getReceipients(HorizonPlayer $p)
     {
         //if($p->)
+    }
+
+    public static function error(Throwable $error)
+    {
+
     }
 
 

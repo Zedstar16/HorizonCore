@@ -11,7 +11,6 @@ use Zedstar16\HorizonCore\managers\TopDataManager;
 class TopCoinsCommand extends Command
 {
 
-
     public function __construct()
     {
         parent::__construct("topcoins");

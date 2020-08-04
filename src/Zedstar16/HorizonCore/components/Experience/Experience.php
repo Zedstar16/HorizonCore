@@ -31,7 +31,7 @@ class Experience
     {
         $p = Horizon::getPlayer($this->p);
         if ($p !== null) {
-            new AddXPEvent(Horizon::getPlayer($p));
+            new AddXPEvent($p);
         }
         $this->experience += $amount;
         $this->save();

@@ -18,7 +18,7 @@ class KothUtils
     {
         $pos = Horizon::Config()["kothcenter"];
         $center = new Position($pos["x"], $pos["y"], $pos["z"], Server::getInstance()->getLevelByName(WorldMap::KIT));
-        $radius = 4;
+        $radius = 3;
         for ($x = $center->x - $radius; $x <= $center->x + $radius; $x++) {
             for ($z = $center->z - $radius; $z <= $center->z + $radius; $z++) {
                 $center->getLevel()->setBlock(new Vector3($x, $center->y, $z), Block::get(Block::STAINED_GLASS, $active ? 5 : 14));

@@ -4,6 +4,7 @@
 namespace Zedstar16\HorizonCore\listeners;
 
 
+use pocketmine\entity\Living;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByChildEntityEvent;
@@ -32,6 +33,7 @@ use Zedstar16\HorizonCore\components\LobbyItems\LobbyItems;
 use Zedstar16\HorizonCore\components\Moderation\ModerationAPI;
 use Zedstar16\HorizonCore\components\Moderation\ModerationException;
 use Zedstar16\HorizonCore\components\Moderation\TimeFormat;
+use Zedstar16\HorizonCore\components\WorldMap;
 use Zedstar16\HorizonCore\events\AddCoinsEvent;
 use Zedstar16\HorizonCore\events\AddKillStreakEvent;
 use Zedstar16\HorizonCore\events\AddXPEvent;
@@ -41,6 +43,7 @@ use Zedstar16\HorizonCore\events\PlayerLeaveKothEvent;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\hud\CreateScoreboard;
+use Zedstar16\HorizonCore\managers\FloatingTextManager;
 use Zedstar16\HorizonCore\managers\PlayerDataManager;
 use Zedstar16\HorizonCore\managers\SessionManager;
 use Zedstar16\HorizonCore\utils\Utils;
@@ -108,6 +111,11 @@ class PlayerEventListener implements Listener
                 } catch (ModerationException $e) {
                 }
                 $event->setCancelled();
+            } else {
+                if ($p instanceof HorizonPlayer) {
+                    SessionManager::add($p);
+                    echo "added";
+                }
             }
         }), 20);
     }
@@ -126,6 +134,7 @@ class PlayerEventListener implements Listener
     {
         $cause = $event->getPlayer()->getLastDamageCause();
         $player = $event->getPlayer();
+        $string = null;
         if ($player instanceof HorizonPlayer) {
             $player->has_claimed_kit_this_life = false;
             $player->getSession()->incrementValue("deaths", 1);
@@ -134,14 +143,14 @@ class PlayerEventListener implements Listener
                 if ($killer instanceof HorizonPlayer) {
                     $messages = ["was railed by", "was demolished by", "got rekt by", "was shanked up by", "got tossed by", "took an L to", "got boomered on by", "was zombified by"];
                     shuffle($messages);
-                    $event->setDeathMessage("§c᛭ §e{$player->getName()}§6 $messages[0] §e{$killer->getName()} §6using " . $killer->getInventory()->getItemInHand()->getName());
+                    $string = "§c᛭ §e{$player->getName()}§6 $messages[0] §e{$killer->getName()} §6using " . $killer->getInventory()->getItemInHand()->getName();
                     $killer = $cause->getDamager();
                     $killer->getSession()->incrementValue("kills", 1);
                     $killer->getSession()->addKillToStreak();
                 }
             } elseif ($cause instanceof EntityDamageByChildEntityEvent) {
                 $killer = $cause->getDamager();
-                if ($killer instanceof HorizonPlayer) {
+                if ($killer instanceof Living) {
                     $dist = $player->distance($killer);
                     if ($dist < 10) {
                         $message = "bowspammed";
@@ -150,11 +159,11 @@ class PlayerEventListener implements Listener
                     } else {
                         $message = "sniped";
                     }
-                    $event->setDeathMessage("§c᛭ §e{$player->getName()}§6 was $message by §e{$killer->getName()} §7(§f{$dist}§em)");
+                    $string = "§c᛭ §e{$player->getName()}§6 was $message by §e{$killer->getName()} §7(§f{$dist}§am)";
                 }
             } elseif ($cause->getCause() === EntityDamageEvent::CAUSE_VOID) {
                 if (isset($player->last_damager[0]) && microtime(true) - $player->last_damager[0]["time"] < 10) {
-                    $event->setDeathMessage("§c᛭ §e{$player->getName()}§6 was thrown into the void by §e{$player->last_damager[0]["player"]}");
+                    $string = "§c᛭ §e{$player->getName()}§6 was thrown into the void by §e{$player->last_damager[0]["player"]}";
                     $killer = $this->s->getPlayerExact($player->last_damager[0]["player"]);
                     if ($killer !== null) {
                         $killer->getSession()->incrementValue("kills", 1);
@@ -173,15 +182,14 @@ class PlayerEventListener implements Listener
                     EntityDamageEvent::CAUSE_FIRE_TICK => "burned to death",
                     EntityDamageEvent::CAUSE_LAVA => "burned to death",
                     EntityDamageEvent::CAUSE_BLOCK_EXPLOSION => "died in an explosion",
-                    EntityDamageEvent::CAUSE_VOID => "was taken by the void",
+                    EntityDamageEvent::CAUSE_VOID => "was lost to the void",
                     EntityDamageEvent::CAUSE_CUSTOM => "died to an unknown cause",
                     EntityDamageEvent::CAUSE_STARVATION => "starved to death"
                 ];
-                $event->setDeathMessage("§c🕱 §e{$player->getName()}§6 " . $causes[$cause->getCause()]);
-            } else {
-                $event->setDeathMessage("");
+                $string = "§c🕱 §e{$player->getName()}§6 " . $causes[$cause->getCause()];
             }
         }
+        $event->setDeathMessage($string ?? "unlisted");
     }
 
     public function onInteract(PlayerInteractEvent $event)
@@ -200,6 +208,7 @@ class PlayerEventListener implements Listener
             }
         }
     }
+
 
     public function onKothEnter(PlayerEnterKothEvent $event)
     {
@@ -244,10 +253,16 @@ class PlayerEventListener implements Listener
         //   $p->getSession()->getScoreboard()->updateLine();
     }
 
+
     public function onJoin(PlayerJoinEvent $event)
     {
         $p = $event->getPlayer();
         if ($p instanceof HorizonPlayer) {
+            var_dump(SessionManager::$sessions);
+            $to = $event->getPlayer()->getLevel();
+            if (!FloatingTextManager::isLoadedIn($to)) {
+                FloatingTextManager::loadIn($to);
+            }
             $event->setJoinMessage("");
             if (!$event->getPlayer()->hasPlayedBefore()) {
                 Server::getInstance()->broadcastMessage("§c⮚ §e{$p->getName()} §6joined Horizon for the first time!");
@@ -255,8 +270,7 @@ class PlayerEventListener implements Listener
             $string = Utils::centralise("This is an extremely long title which i am wrijk;jk;jk;\nReason: Hacking and being a mega idiot\nModerator: YourMother");
             // $p->kick($string, false);
             //  new Shop($p);
-            SessionManager::add($p);
-            $p->teleport(Server::getInstance()->getLevelByName("kit2")->getSpawnLocation());
+            $p->teleport(Server::getInstance()->getLevelByName(WorldMap::KIT)->getSpawnLocation());
             $p->setInSpawn(true);
 
             PlayerDataManager::incrementValue($p, "joins", 1);
@@ -309,6 +323,7 @@ class PlayerEventListener implements Listener
     {
         $p = $event->getPlayer();
         if ($p instanceof HorizonPlayer) {
+            $p->teleport(Server::getInstance()->getLevelByName(WorldMap::KIT)->getSpawnLocation());
             $p->updateScoreTag();
             $p->setInSpawn(true, false);
         }

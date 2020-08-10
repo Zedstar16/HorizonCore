@@ -10,6 +10,7 @@ use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;
 use Zedstar16\HorizonCore\HorizonPlayer;
+use Zedstar16\HorizonCore\managers\FloatingTextManager;
 
 class EntityEventListener implements Listener
 {
@@ -39,6 +40,10 @@ class EntityEventListener implements Listener
     {
         $entity = $event->getEntity();
         if ($entity instanceof Player) {
+            $to = $event->getTarget();
+            if (!FloatingTextManager::isLoadedIn($to)) {
+                FloatingTextManager::loadIn($to);
+            }
             foreach ($event->getOrigin()->getPlayers() as $player) {
                 if ($player instanceof HorizonPlayer) {
                     $player->getSession()->getScoreboard()->updateLine("Area Players", count($player->getLevel()->getPlayers()));

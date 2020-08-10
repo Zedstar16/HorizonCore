@@ -34,7 +34,7 @@ class FloatingTextCommand extends Command
         if ($sender instanceof HorizonPlayer) {
             $level = $sender->getLevel();
             $pos = new Vector3($sender->getFloorX(), $sender->getFloorY(), $sender->getFloorZ());
-            if (isset($args[0])) {
+            if ((count($args) >= 2) or (isset($args[0]) && $args[0] === "list")) {
                 $arg0 = $args[0];
                 array_shift($args);
                 switch ($arg0) {
@@ -56,11 +56,25 @@ class FloatingTextCommand extends Command
                         if (isset($texts[$level->getName()])) {
                             foreach ($texts[$level->getName()] as $entity) {
                                 if ($sender->distance($entity) <= $radius) {
-                                    $list[] = $entity->getNameTag();
+                                    $list[] = $entity->namedtag->getString("floatingtext") . " §7(§a" . round($sender->distance($entity), 2) . "m§7)";
                                 }
                             }
-                            $sender->sendMessage("§aFloating Texts within a §f$radius §ablock redius of you:\n§6- " . implode("\n§6- ", $list));
+                            $sender->sendMessage("§aFloating Texts within a §f$radius §ablock radius of you:\n§6- §b" . implode("\n§6- §b", $list));
                         } else $sender->sendMessage("§cThere are not any floating texts in your current level");
+                        break;
+                    case "tp":
+                        $entity = FloatingTextManager::getTag($args[0], $level);
+                        if ($entity !== null) {
+                            $sender->teleport($entity);
+                            $sender->sendMessage("§aTeleported you to entity $args[0]");
+                        } else $sender->sendMessage("§cEntity with tag §f$args[0]§c not found in current world");
+                        break;
+                    case "reset":
+                        $entity = FloatingTextManager::getTag($args[0], $level);
+                        if ($entity !== null) {
+                            FloatingTextManager::update($entity, $args[0], "Reset Floating Text (TAG: $args[0])");
+                            $sender->sendMessage("§aSuccessfully updated floating text with tag $args[0]");
+                        } else $sender->sendMessage("§cFloating text with tag $args[0] not found");
                         break;
                     case "edit":
                         if (isset($args[1])) {
@@ -84,7 +98,7 @@ class FloatingTextCommand extends Command
                                     FloatingTextManager::update($entity, $name, $text);
                                 }
                                 $sender->sendMessage("§aSuccessfully updated floating text with tag $name");
-                            } else $sender->sendMessage("§cFloating text with tag $args[1] not found");
+                            } else $sender->sendMessage("§cFloating text with tag $args[0] not found");
                         } else $sender->sendMessage("§cSpecify text to update this particle with");
                         break;
                     case "remove":

@@ -10,6 +10,9 @@ class Cache
     public static $data = [];
     public static $altered = [];
 
+    public static $top_killers = [];
+
+
     public static $discord_dispatch = [];
 
     public static function write()

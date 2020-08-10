@@ -27,9 +27,18 @@ class FloatingTextManager
     public static function loadIn(Level $level)
     {
         $data = FileManager::getJsonData("floating-texts");
+        $exists = [];
         foreach ($level->getEntities() as $entity) {
             if ($entity instanceof FloatingText && $entity->namedtag->hasTag("floatingtext")) {
-                self::$texts[$level->getName()][$entity->namedtag->getString("floatingtext")] = $entity;
+                $tag = $entity->namedtag->getString("floatingtext");
+                if (!isset($data[$level->getName()][$tag])) {
+                    $entity->flagForDespawn();
+                } else {
+                    if (!isset($exists[$tag])) {
+                        self::$texts[$level->getName()][$entity->namedtag->getString("floatingtext")] = $entity;
+                        $entity->setNameTag($data[$level->getName()][$tag]["text"]);
+                    } else $entity->flagForDespawn();
+                }
             }
         }
         if (isset($data[$level->getName()])) {
@@ -47,13 +56,15 @@ class FloatingTextManager
                 self::add($level, new Vector3($info["pos"]["x"], $info["pos"]["y"], $info["pos"]["z"]), $tag, $info["text"]);
             }
         }
-        self::$levels[$level->getName()] = true;
     }
 
     public static function unload(Level $level)
     {
         if (isset(self::$texts[$level->getName()])) {
             unset(self::$texts[$level->getName()]);
+        }
+        if (isset(self::$levels[$level->getName()])) {
+            unset(self::$levels[$level->getName()]);
         }
     }
 
@@ -79,6 +90,7 @@ class FloatingTextManager
         $nbt->setString("floatingtext", $name);
         $entity = Entity::createEntity("FloatingText", $level, $nbt, $name, $text);
         $entity->spawnToAll();
+        $entity->setNameTag($text);
         self::$texts[$level->getName()][] = $entity;
     }
 
@@ -101,11 +113,15 @@ class FloatingTextManager
             if ($entity !== null) {
                 $data = FileManager::getJsonData("floating-texts");
                 $levelname = $entity->getLevel()->getName();
-                unset($data[$levelname][$tag]);
-                FileManager::saveJsonData("floating-texts", $data);
-                $entity->flagForDespawn();
-                unset(array_keys(self::$texts[$levelname], $entity)[0]);
-                return true;
+                $key = array_search($entity, self::$texts[$levelname], true);
+                if (isset(self::$texts[$levelname][$key])) {
+                    unset(self::$texts[$levelname][$key]);
+                    $levelname = $entity->getLevel()->getName();
+                    unset($data[$levelname][$tag]);
+                    FileManager::saveJsonData("floating-texts", $data);
+                    $entity->flagForDespawn();
+                    return true;
+                }
             }
         } catch (Throwable $err) {
             Utils::error($err);

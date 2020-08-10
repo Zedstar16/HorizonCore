@@ -11,7 +11,7 @@ use Zedstar16\HorizonCore\session\Session;
 class SessionManager
 {
     /** @var Session[] */
-    private static $sessions = [];
+    public static $sessions = [];
 
     public static function add(HorizonPlayer $player)
     {

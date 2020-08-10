@@ -16,6 +16,8 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\cache\Cache;
+use Zedstar16\HorizonCore\entities\Bosses\SnowmanBoss;
+use Zedstar16\HorizonCore\entities\Bosses\ZombieBoss;
 use Zedstar16\HorizonCore\entities\FireworksRocket;
 use Zedstar16\HorizonCore\entities\FloatingText;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenuHandler;
@@ -45,6 +47,15 @@ class Horizon extends PluginBase implements Listener
 
     public $lines = 0;
 
+    public $f = 0;
+
+    const ENTITIES = [
+        FloatingText::class,
+        FireworksRocket::class,
+        SnowmanBoss::class,
+        ZombieBoss::class
+    ];
+
     public function onEnable(): void
     {
         self::$instance = $this;
@@ -64,14 +75,18 @@ class Horizon extends PluginBase implements Listener
         $this->getServer()->loadLevel("kit2");
         ItemFactory::registerItem(new Fireworks());
         Item::initCreativeItems();
-        if (!Entity::registerEntity(FireworksRocket::class, false, ["ZedRPG"])) {
-            $this->getLogger()->error("Failed to register ZedRPG entity with savename 'ZedRPG'");
+        $i = 0;
+        foreach (self::ENTITIES as $entity) {
+            if (Entity::registerEntity($entity, true)) $i++;
         }
-        Entity::registerEntity(FloatingText::class);
+        $this->getLogger()->notice("Registered $i/" . count(self::ENTITIES) . " custom entities successfully!");
         $bad = ["cunt", "fuck", "shit", "nigga", "kys", "nigger"];
         // $c = new ChatFilter("n1i1i1i1i1gggg3333eeeerrrrrrrr");
         //     $c->getCleanedMessage();
-        //   $this->getLines("plugins/HorizonCore/src/Zedstar16/HorizonCore/");
+        //  $this->getLines("plugins/HorizonCore/src/Zedstar16/HorizonCore/");
+        // var_dump($this->lines);
+        //var_dump($this->f);
+
     }
 
     public function getLines($path)
@@ -80,11 +95,9 @@ class Horizon extends PluginBase implements Listener
         foreach ($i as $item) {
             if (!$i->isDot()) {
                 if ($i->isDir()) {
-                    if ($i->getFilename() === "libs") {
-                        return;
-                    }
                     $this->getLines($i->getRealPath());
                 } else {
+                    $this->f++;
                     $this->lines += count(explode("\n", file_get_contents($item->getRealPath())));
                 }
             }
@@ -99,7 +112,7 @@ class Horizon extends PluginBase implements Listener
                 if ($i->isDir()) {
                     $this->loadCommands($i->getRealPath());
                 } else {
-                    $path = explode('src\\', $item->getPath())[1];
+                    $path = explode(PHP_OS_FAMILY === "Linux" ? 'src/' : 'src\\', $item->getPath())[1];
                     $filename = $item->getFilename();
                     if (substr($filename, -4) === ".php") {
                         $class = str_replace("/", "\\", $path . "\\" . substr($filename, 0, -4));
@@ -116,7 +129,7 @@ class Horizon extends PluginBase implements Listener
         foreach ($commands as $command) {
             $commandMap = $this->getServer()->getCommandMap();
             $cmd = $commandMap->getCommand($command);
-            if ($cmd == null) {
+            if ($cmd === null) {
                 return;
             }
             $cmd->setLabel("");
@@ -215,7 +228,10 @@ class Horizon extends PluginBase implements Listener
                     $player->getSession()->getScoreboard()->updateLine("Online", count($this->getServer()->getOnlinePlayers()));
                 }
             }
-        }), 20);
+        }), 50);
+        $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick): void {
+            //    Server::getInstance()->getAsyncPool()->submitTask(new AsyncTopCalculator())
+        }), 60 * 20);
     }
 
     private function initializeFiles()

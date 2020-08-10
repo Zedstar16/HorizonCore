@@ -43,7 +43,7 @@ class NetworkListener implements Listener
 
     public function onLevelLoad(LevelLoadEvent $event)
     {
-        FloatingTextManager::loadIn($event->getLevel());
+     //   FloatingTextManager::loadIn($event->getLevel());
     }
 
     public function onLevelUnload(LevelUnloadEvent $event)

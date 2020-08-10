@@ -7,6 +7,7 @@ namespace Zedstar16\HorizonCore\utils;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
+use pocketmine\Server;
 use Throwable;
 use TypeError;
 use Zedstar16\HorizonCore\Horizon;
@@ -94,7 +95,7 @@ class Utils
 
     public static function error(Throwable $error)
     {
-
+        Server::getInstance()->getLogger()->error($error->getMessage() . "in {$error->getFile()} on Line {$error->getLine()}");
     }
 
 

@@ -6,6 +6,7 @@ namespace Zedstar16\HorizonCore\managers;
 
 use Zedstar16\HorizonCore\cache\Cache;
 use Zedstar16\HorizonCore\Horizon;
+use Zedstar16\HorizonCore\utils\Utils;
 
 class FileManager
 {
@@ -27,16 +28,15 @@ class FileManager
 
     public static function getJsonData(string $filename): array
     {
-        if (substr($filename, 0, strlen("players")) == "players") {
+        if (strpos($filename, "players") === 0) {
             $username = substr($filename, strlen("players/"));
-            return Cache::$data[$username] ?? [];
-        } else {
-            $filename .= ".json";
-            $folder = Horizon::getInstance()->getDataFolder() . "resources/";
-            if (file_exists($folder . $filename)) {
-                return json_decode(file_get_contents($folder . $filename), true);
-            } else file_put_contents($folder . $filename, json_encode([]));
+            return Utils::__toArray(Cache::$data[$username] ?? []);
         }
+        $filename .= ".json";
+        $folder = Horizon::getInstance()->getDataFolder() . "resources/";
+        if (file_exists($folder . $filename)) {
+            return json_decode(file_get_contents($folder . $filename), true);
+        } else file_put_contents($folder . $filename, json_encode([]));
         return [];
     }
 
@@ -53,7 +53,7 @@ class FileManager
 
     public static function saveJsonData(string $filename, $data): void
     {
-        if (substr($filename, 0, strlen("players")) == "players") {
+        if (strpos($filename, "players") === 0) {
             $username = substr($filename, strlen("players/"));
             Cache::$data[$username] = $data;
             if (!in_array($username, Cache::$altered)) {

@@ -1,8 +1,24 @@
 {
+  "ips": [
+    "127.0.0.1"
+  ],
+  "cids": [
+    6866830534689719296
+  ],
+  "deviceids": [
+    "88174d49-1d10-3d05-adae-87d2b9cbe796"
+  ],
+  "last_seen_data": {
+    "ip": "127.0.0.1",
+    "cid": 6866830534689719296,
+    "deviceid": "88174d49-1d10-3d05-adae-87d2b9cbe796",
+    "os": "Windows 10",
+    "ui": "Classic UI",
+    "controls": "Mouse",
+    "timestamp": 1597628921
+  },
   "username-cased": "Zedstar16",
-  "ips": [],
-  "cids": [],
-  "deviceids": [],
+  "xuid": "2535451299201728",
   "hits": 0,
   "experience": 0,
   "coins": 0,
@@ -12,20 +28,11 @@
   "distance_travelled": 0,
   "kills": 0,
   "deaths": 0,
-  "joins": 1,
+  "joins": 0,
   "chat_messages": 0,
   "items_dropped": 0,
   "items_picked_up": 0,
   "items_consumed": 0,
   "blocks_placed": 0,
-  "blocks_broken": 0,
-  "last_seen_data": {
-    "ip": "",
-    "cid": "",
-    "deviceid": "",
-    "os": "",
-    "ui": "",
-    "controls": "",
-    "timestamp": ""
-  }
+  "blocks_broken": 0
 }

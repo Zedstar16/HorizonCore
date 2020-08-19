@@ -1,41 +1,148 @@
 {
-  "inventory": {
-    "0": {
-      "id": 258,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWU0AMKncsKnbMKnOT4gwqdiRkZBIMKncsKnOFvCpzYwIMKnN3BsYXllcnPCpzhdIMKnbMKnOTwACAMAZmZhAwBmZmEJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+  "inventory": [
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADAAAA=="
     },
-    "1": {
-      "id": 276,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWU2AMKncsKnbMKnOT4gwqdiRHVlbHMgwqdywqc4W8KnNjAgwqc3cGxheWVyc8KnOF0gwqdswqc5PAAIBQBkdWVscwUAZHVlbHMJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADEAAA=="
     },
-    "3": {
-      "id": 388,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUaAMKncsKnbMKnOT4gwqdiUHJvZmlsZSDCpzk8AAgHAHByb2ZpbGUHAHByb2ZpbGUJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADIAAA=="
     },
-    "4": {
-      "id": 130,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUZAMKncsKnbMKnOT4gwqdiQ3JhdGVzIMKnOTwACAYAY3JhdGVzBgBjcmF0ZXMJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADMAAA=="
     },
-    "5": {
-      "id": 377,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUYAMKncsKnbMKnOT4gwqdiU3RhdHMgwqc5PAAIBQBzdGF0cwUAc3RhdHMJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADQAAA=="
     },
-    "6": {
-      "id": 401,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUjAMKncsKnbMKnOT4gwqdiVG95cyAmIENvc21ldGljcyDCpzk8AAgEAHRveXMEAHRveXMJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADUAAA=="
     },
-    "7": {
-      "id": 340,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUXAMKncsKnbMKnOT4gwqdiSW5mbyDCpzk8AAgEAGluZm8EAGluZm8JBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADYAAA=="
     },
-    "8": {
-      "id": 399,
-      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUbAMKncsKnbMKnOT4gwqdiU2V0dGluZ3Mgwqc5PAAICABzZXR0aW5ncwgAc2V0dGluZ3MJBABlbmNoCgEAAAACAgBpZP8AAgMAbHZsAQAAAA=="
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADcAAA=="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADgAAA=="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUBADkAAA=="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADEwAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADExAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADEyAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADEzAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADE0AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADE1AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADE2AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADE3AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADE4AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADE5AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADIwAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADIxAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADIyAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADIzAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADI0AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADI1AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADI2AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADI3AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADI4AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADI5AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADMwAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADMxAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADMyAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADMzAAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADM0AAA="
+    },
+    {
+      "id": 3,
+      "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADM1AAA="
     }
-  },
-  "armorinventory": {
-    "1": {
-      "id": 444
-    }
-  }
+  ]
 }

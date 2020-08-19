@@ -27,32 +27,13 @@ class FloatingTextManager
     public static function loadIn(Level $level)
     {
         $data = FileManager::getJsonData("floating-texts");
-        $exists = [];
         foreach ($level->getEntities() as $entity) {
             if ($entity instanceof FloatingText && $entity->namedtag->hasTag("floatingtext")) {
-                $tag = $entity->namedtag->getString("floatingtext");
-                if (!isset($data[$level->getName()][$tag])) {
-                    $entity->flagForDespawn();
-                } else {
-                    if (!isset($exists[$tag])) {
-                        self::$texts[$level->getName()][$entity->namedtag->getString("floatingtext")] = $entity;
-                        $entity->setNameTag($data[$level->getName()][$tag]["text"]);
-                    } else $entity->flagForDespawn();
-                }
+                $entity->flagForDespawn();
             }
         }
         if (isset($data[$level->getName()])) {
-            $toadd = $data[$level->getName()];
-            foreach ($toadd as $tag => $info) {
-                foreach ($level->getEntities() as $entity) {
-                    if ($entity instanceof FloatingText) {
-                        if ($entity->namedtag->hasTag($tag)) {
-                            unset($toadd[$tag]);
-                        }
-                    }
-                }
-            }
-            foreach ($toadd as $tag => $info) {
+            foreach ($data[$level->getName()] as $tag => $info) {
                 self::add($level, new Vector3($info["pos"]["x"], $info["pos"]["y"], $info["pos"]["z"]), $tag, $info["text"]);
             }
         }

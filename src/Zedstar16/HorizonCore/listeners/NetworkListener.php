@@ -7,6 +7,8 @@ use pocketmine\event\level\LevelLoadEvent;
 use pocketmine\event\level\LevelUnloadEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\network\mcpe\protocol\ContainerClosePacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
@@ -18,6 +20,14 @@ use Zedstar16\HorizonCore\managers\FloatingTextManager;
 class NetworkListener implements Listener
 {
 
+    /** @var bool */
+    private $cancel_send = true;
+
+    /**
+     * @param DataPacketReceiveEvent $event
+     * @priority NORMAL
+     * @ignoreCancelled true
+     */
     public function onDataPacketReceive(DataPacketReceiveEvent $event)
     {
         $p = $event->getPlayer();
@@ -39,11 +49,28 @@ class NetworkListener implements Listener
         } elseif ($pk::NETWORK_ID === PlayerActionPacket::NETWORK_ID && $pk->action === PlayerActionPacket::ACTION_START_BREAK && $p->getGamemode() == 2) {
             new PlayerClickEvent($p);
         }
+        if ($pk instanceof ContainerClosePacket) {
+            $this->cancel_send = false;
+            $event->getPlayer()->sendDataPacket($event->getPacket(), false, true);
+            $this->cancel_send = true;
+        }
+    }
+
+    /**
+     * @param DataPacketSendEvent $event
+     * @priority NORMAL
+     * @ignoreCancelled true
+     */
+    public function onDataPacketSend(DataPacketSendEvent $event): void
+    {
+        if ($this->cancel_send && $event->getPacket() instanceof ContainerClosePacket) {
+            $event->setCancelled();
+        }
     }
 
     public function onLevelLoad(LevelLoadEvent $event)
     {
-     //   FloatingTextManager::loadIn($event->getLevel());
+        //   FloatingTextManager::loadIn($event->getLevel());
     }
 
     public function onLevelUnload(LevelUnloadEvent $event)

@@ -16,9 +16,12 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\cache\Cache;
+use Zedstar16\HorizonCore\components\ChatHandler\ChatFilter;
+use Zedstar16\HorizonCore\components\Crate\CrateItemShiftTask;
 use Zedstar16\HorizonCore\entities\Bosses\SnowmanBoss;
 use Zedstar16\HorizonCore\entities\Bosses\ZombieBoss;
 use Zedstar16\HorizonCore\entities\FireworksRocket;
+use Zedstar16\HorizonCore\entities\FloatingItemEntity;
 use Zedstar16\HorizonCore\entities\FloatingText;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenuHandler;
 use Zedstar16\HorizonCore\libs\xenialdan\apibossbar\API;
@@ -26,7 +29,10 @@ use Zedstar16\HorizonCore\listeners\EntityEventListener;
 use Zedstar16\HorizonCore\listeners\InventoryEventListener;
 use Zedstar16\HorizonCore\listeners\NetworkListener;
 use Zedstar16\HorizonCore\listeners\PlayerEventListener;
+use Zedstar16\HorizonCore\managers\CrateManager;
 use Zedstar16\HorizonCore\managers\FFAManager;
+use Zedstar16\HorizonCore\managers\FileManager;
+use Zedstar16\HorizonCore\managers\KitManager;
 use Zedstar16\HorizonCore\tasks\async\AsyncDataLoader;
 use Zedstar16\HorizonCore\tasks\Ticker;
 use Zedstar16\ZedFun\entity\Fireworks;
@@ -53,7 +59,8 @@ class Horizon extends PluginBase implements Listener
         FloatingText::class,
         FireworksRocket::class,
         SnowmanBoss::class,
-        ZombieBoss::class
+        ZombieBoss::class,
+        FloatingItemEntity::class
     ];
 
     public function onEnable(): void
@@ -80,12 +87,18 @@ class Horizon extends PluginBase implements Listener
             if (Entity::registerEntity($entity, true)) $i++;
         }
         $this->getLogger()->notice("Registered $i/" . count(self::ENTITIES) . " custom entities successfully!");
+        // CrateManager::registerCrates();
         $bad = ["cunt", "fuck", "shit", "nigga", "kys", "nigger"];
-        // $c = new ChatFilter("n1i1i1i1i1gggg3333eeeerrrrrrrr");
-        //     $c->getCleanedMessage();
+        $c = new ChatFilter("b1tch");
+        $c->getCleanedMessage();
+        var_dump($c->swear_found);
+        var_dump($c->cansend);
+        // print_r(KitManager::parseContents(FileManager::getYamlData("crate")["items"]));
         //  $this->getLines("plugins/HorizonCore/src/Zedstar16/HorizonCore/");
         // var_dump($this->lines);
         //var_dump($this->f);
+        //$this->getScheduler()->scheduleRepeatingTask(new CrateItemShiftTask(), 1);
+
 
     }
 
@@ -222,13 +235,13 @@ class Horizon extends PluginBase implements Listener
     public function registerTasks()
     {
         $this->getScheduler()->scheduleRepeatingTask(new Ticker(), 20);
-        $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick): void {
+        $this->getScheduler()->scheduleDelayedRepeatingTask(new ClosureTask(function (int $currentTick): void {
             foreach ($this->getServer()->getOnlinePlayers() as $player) {
-                if (($player instanceof HorizonPlayer) && $player->getSession() !== null) {
+                if (($player instanceof HorizonPlayer) && $player->getSession() !== null && $player->getSession()->getScoreboard() !== null) {
                     $player->getSession()->getScoreboard()->updateLine("Online", count($this->getServer()->getOnlinePlayers()));
                 }
             }
-        }), 50);
+        }), 5, 50);
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick): void {
             //    Server::getInstance()->getAsyncPool()->submitTask(new AsyncTopCalculator())
         }), 60 * 20);

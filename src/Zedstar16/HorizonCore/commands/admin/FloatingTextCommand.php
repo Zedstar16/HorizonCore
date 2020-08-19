@@ -86,11 +86,9 @@ class FloatingTextCommand extends Command
                                     $current = explode("\n", $entity->getNameTag());
                                     $current[(int)$args[1] - 1] = $text;
                                     $string = "";
-                                    print_r($current);
                                     for ($i = 0; $i <= array_key_last($current); $i++) {
                                         $string .= isset($current[$i]) ? $current[$i] . "\n" : "\n";
                                     }
-                                    var_dump($string);
                                     FloatingTextManager::update($entity, $name, $string);
                                 } else {
                                     array_shift($args);

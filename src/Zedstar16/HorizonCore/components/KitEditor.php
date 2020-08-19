@@ -22,20 +22,19 @@ class KitEditor
     public function __construct(Player $player)
     {
         $this->p = $player;
-        echo "HI";
         $this->primary();
     }
 
-    public function primary()
+    public function primary(): void
     {
-        $buttons = ["KitEditor", "FFA Editor"];
+        $buttons = ["KitEditor", "FFA Editor", "Duel Kit Editor"];
         $form = new SimpleForm(function (Player $player, $data = null) {
             if ($data === null) {
                 return;
             }
-            if ($data == 0) {
+            if ($data === 0) {
                 $this->openDuelKitEditorUI();
-            } elseif ($data == 1) {
+            } elseif ($data === 1) {
                 $this->openFFAKitEditorUI();
             }
         });
@@ -47,15 +46,15 @@ class KitEditor
         $this->p->sendForm($form);
     }
 
-    public function openFFAKitEditorUI()
+    public function openFFAKitEditorUI(): void
     {
         $buttons = ["BuildPvP", "NoDebuff", "Gapple", "Combo"];
         $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
             if ($data === null) {
                 return;
-            } else {
-                $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_FFA);
             }
+
+            $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_FFA);
         });
         $form->setTitle("SettingsForm");
         $form->setContent("Select an option");
@@ -65,15 +64,14 @@ class KitEditor
         $this->p->sendForm($form);
     }
 
-    public function openDuelKitEditorUI()
+    public function openDuelKitEditorUI(): void
     {
         $buttons = ["NoDebuff", "Gapple", "Combo", "BuildPvP", "Diamond", "Archer", "Spleef"];
         $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
             if ($data === null) {
                 return;
-            } else {
-                $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_DUELS);
             }
+            $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_DUELS);
         });
         $form->setTitle("SettingsForm");
         $form->setContent("Select an option");
@@ -83,15 +81,14 @@ class KitEditor
         $this->p->sendForm($form);
     }
 
-    public function openNormalKitEditorUI()
+    public function openNormalKitEditorUI(): void
     {
         $buttons = [];
         $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
             if ($data === null) {
                 return;
-            } else {
-                $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_DUELS);
             }
+            $this->openKitEditor(strtolower($buttons[$data]), Constants::KIT_DUELS);
         });
         $form->setTitle("SettingsForm");
         $form->setContent("Select an option");
@@ -101,7 +98,7 @@ class KitEditor
         $this->p->sendForm($form);
     }
 
-    public function openKitEditor($kit, $type)
+    public function openKitEditor($kit, $type): void
     {
         $menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
         $playerinventory = $this->p->getInventory()->getContents();
@@ -114,15 +111,15 @@ class KitEditor
                 echo 2;
                 return false;
             }
-            if ($itemClicked->getId() == ItemIds::STAINED_GLASS_PANE) {
+            if ($itemClicked->getId() === ItemIds::STAINED_GLASS_PANE) {
                 echo 3;
                 return false;
             }
-            if ($itemClicked->getId() == ItemIds::CONCRETE) {
-                if ($itemClicked->getDamage() == 14) {
+            if ($itemClicked->getId() === ItemIds::CONCRETE) {
+                if ($itemClicked->getDamage() === 14) {
                     $player->sendMessage("§cExit without saving changes to kit inventory");
                     $player->removeAllWindows();
-                } elseif ($itemClicked->getDamage() == 5) {
+                } elseif ($itemClicked->getDamage() === 5) {
                     $this->saveContents($player, $kit, $type, $action->getInventory()->getContents());
                     $player->sendMessage("§aSuccessfully saved changes to kit");
                     $player->removeAllWindows();
@@ -133,7 +130,7 @@ class KitEditor
             }
             return true;
         });
-        $menu->setInventoryCloseListener(function (Player $player, InvMenuInventory $inventory) {
+        $menu->setInventoryCloseListener(static function (Player $player, InvMenuInventory $inventory) {
             $inv = $player->getInventory()->getContents();
             foreach ($inv as $item) {
                 if ($item->getNamedTag()->hasTag("chest")) {
@@ -148,11 +145,11 @@ class KitEditor
         $menu->send($this->p);
     }
 
-    public function saveContents($player, $kit, $type, $contents)
+    public function saveContents($player, $kit, $type, $contents): void
     {
         $data = [];
         foreach ($contents as $key => $item) {
-            if ($item->getNamedTagEntry("chest") == null) {
+            if ($item->getNamedTagEntry("chest") === null) {
                 unset($data[$key][array_keys($data[$key], $item)[0]]);
             }
         }

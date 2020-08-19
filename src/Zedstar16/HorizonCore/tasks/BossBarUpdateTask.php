@@ -29,14 +29,16 @@ class BossBarUpdateTask extends Task
 
     public function onRun(int $currentTick)
     {
-        if($this->i >= count(BossBarTitles::TITLES)){
+        if ($this->i >= count(BossBarTitles::TITLES)) {
             $this->i = 0;
         }
-        if( $this->player->getSession() == null){
+        if ($this->player->getSession() === null) {
             $this->getHandler()->cancel();
-        }else {
-            $this->player->getSession()->getBossBar()->setSubTitle(BossBarTitles::TITLES[$this->i]);
-            $this->i++;
+        } else {
+            if ($this->player->getSession()->getBossBar() !== null) {
+                $this->player->getSession()->getBossBar()->setSubTitle(BossBarTitles::TITLES[$this->i]);
+                $this->i++;
+            }
         }
     }
 

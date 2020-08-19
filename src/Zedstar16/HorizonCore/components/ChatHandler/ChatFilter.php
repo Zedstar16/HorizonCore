@@ -30,22 +30,23 @@ class ChatFilter
             "a" => ["4", "@"],
             "i" => ["!", "¡", "|", "1", "l", "/", "\\", "`", "{", "}", "[", "]", ";", ":"],
             "o" => ["0", "()", "•", "<>"],
-            "e" => ["3", "€"],
+            "e" => ["3", "€", "£"],
             "c" => ["(", "<", "[", "{"],
             "g" => ["q", "9", "6", "k", "b"],
             "s" => ["5"],
-            "b" => ["8"]
+            "b" => ["8"],
         ];
         foreach ($split as $char) {
             if (!in_array($char, $char_list, true)) {
                 $this->cansend = false;
                 return "";
             }
+            $string = $this->msg;
             foreach ($possibles as $key => $possible) {
-                foreach ($possible as $replacement) {
-                    $this->checkStandardSwear(str_replace($replacement, $key, $this->msg));
-                }
+                $string = str_replace($possible, $key, $string);
+                $this->checkStandardSwear($string);
             }
+            $this->checkStandardSwear($string);
         }
         return round(microtime(true) - $time, 5) * 1000;
     }

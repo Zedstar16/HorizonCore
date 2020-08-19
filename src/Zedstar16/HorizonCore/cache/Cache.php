@@ -10,6 +10,7 @@ class Cache
     public static $data = [];
     public static $altered = [];
 
+    public static $top_data = [];
     public static $top_killers = [];
 
 
@@ -17,7 +18,6 @@ class Cache
 
     public static function write()
     {
-        print_r(self::$data);
         foreach (self::$altered as $username) {
             file_put_contents("plugins/HorizonCore/resources/players/$username.json", json_encode(self::$data[$username], JSON_THROW_ON_ERROR));
             unset(self::$altered[$username]);

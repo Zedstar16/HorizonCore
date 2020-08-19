@@ -16,7 +16,6 @@ class FFAForm extends BaseFormComponent
     public function primary()
     {
         $buttons = FFAManager::getArenaNames();
-        print_r($buttons);
         $form = new SimpleForm(function(Player $player, $data = null) use($buttons){
             if($data === null){
                 return;

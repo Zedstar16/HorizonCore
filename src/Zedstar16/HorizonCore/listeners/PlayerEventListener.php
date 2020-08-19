@@ -22,17 +22,22 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\CommandEvent;
+use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\level\particle\FlameParticle;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use Zedstar16\HorizonCore\components\CPS;
+use Zedstar16\HorizonCore\components\Crate\CrateItemShiftTask;
 use Zedstar16\HorizonCore\components\HUD\KitPvP;
 use Zedstar16\HorizonCore\components\KOTH\KothGameManager;
 use Zedstar16\HorizonCore\components\LobbyItems\LobbyItems;
 use Zedstar16\HorizonCore\components\Moderation\ModerationAPI;
 use Zedstar16\HorizonCore\components\Moderation\ModerationException;
 use Zedstar16\HorizonCore\components\Moderation\TimeFormat;
+use Zedstar16\HorizonCore\components\TempFloatingItem;
 use Zedstar16\HorizonCore\components\WorldMap;
 use Zedstar16\HorizonCore\events\AddCoinsEvent;
 use Zedstar16\HorizonCore\events\AddKillStreakEvent;
@@ -43,7 +48,11 @@ use Zedstar16\HorizonCore\events\PlayerLeaveKothEvent;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\HorizonPlayer;
 use Zedstar16\HorizonCore\hud\CreateScoreboard;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenu;
+use Zedstar16\HorizonCore\libs\muqsit\invmenu\SharedInvMenu;
+use Zedstar16\HorizonCore\managers\FileManager;
 use Zedstar16\HorizonCore\managers\FloatingTextManager;
+use Zedstar16\HorizonCore\managers\KitManager;
 use Zedstar16\HorizonCore\managers\PlayerDataManager;
 use Zedstar16\HorizonCore\managers\SessionManager;
 use Zedstar16\HorizonCore\utils\Utils;
@@ -52,6 +61,8 @@ class PlayerEventListener implements Listener
 {
     /** @var Server */
     public $s;
+
+    public $interact_cooldown = [];
 
     public function __construct(Server $server)
     {
@@ -98,7 +109,12 @@ class PlayerEventListener implements Listener
 
     public function onLogin(PlayerLoginEvent $event)
     {
+        echo 1;
         Horizon::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event): void {
+            //   if(!$event->isCancelled()){
+            SessionManager::add($event->getPlayer());
+            //   }
+            echo 2;
             $p = $event->getPlayer();
             $name = $p->getLowerCaseName();
             if (ModerationAPI::isBanned($name)) {
@@ -112,12 +128,15 @@ class PlayerEventListener implements Listener
                 }
                 $event->setCancelled();
             } else {
+                echo 3;
                 if ($p instanceof HorizonPlayer) {
-                    SessionManager::add($p);
-                    echo "added";
-                }
+                    echo 4;
+                    // SessionManager::add($p);
+                    //var_dump(SessionManager::$sessions);
+                    var_dump("bruh");
+                } else echo "lol";
             }
-        }), 20);
+        }), 5);
     }
 
     public function onPlace(BlockPlaceEvent $event)
@@ -196,13 +215,42 @@ class PlayerEventListener implements Listener
     {
         $p = $event->getPlayer();
         $item = $event->getItem();
+        $n = $p->getName();
         $tags = ["ffa", "duels", "kitpvp", "profile", "crates", "stats", "info", "settings", "toys"];
-        if ($p instanceof HorizonPlayer) {
+        $bool = true;
+        if (!isset($this->interact_cooldown[$n])) {
+            $this->interact_cooldown[$n] = microtime(true);
+        } else {
+            if (microtime(true) - $this->interact_cooldown[$n] <= 0.1) {
+                $bool = false;
+            }
+        }
+        if ($p instanceof HorizonPlayer && $bool) {
             if ($p->isInPracticeZone()) {
                 foreach ($tags as $tag) {
                     $nbt = $item->getNamedTag();
                     if ($nbt->hasTag($tag)) {
                         new LobbyItems($p, $tag);
+                    }
+                }
+            }
+
+            $block = $event->getBlock();
+            if ($block->getId() === ItemIds::CHEST) {
+                $data = FileManager::getJsonData("conf");
+                foreach ($data["chestkit"] as $name => $kit) {
+                    if ((int)$block->x === $kit["pos"]["x"] && (int)$block->y === $kit["pos"]["y"] && (int)$block->z === $kit["pos"]["z"]) {
+                        $inv = InvMenu::create(InvMenu::TYPE_CHEST);
+                        $contents = [];
+                        foreach ($kit["contents"] as $item) {
+                            $contents[] = KitManager::parseItem($item);
+                        }
+                        $inv->getInventory()->setContents($contents);
+                        $inv->send($p);
+                        $inv->setName("Contents for Kit: " . Utils::colorize($name));
+                        $inv->readonly(true);
+                        $event->setCancelled();
+                        break;
                     }
                 }
             }
@@ -258,7 +306,7 @@ class PlayerEventListener implements Listener
     {
         $p = $event->getPlayer();
         if ($p instanceof HorizonPlayer) {
-            var_dump(SessionManager::$sessions);
+            $p->getSession()->initialiseProperties();
             $to = $event->getPlayer()->getLevel();
             if (!FloatingTextManager::isLoadedIn($to)) {
                 FloatingTextManager::loadIn($to);
@@ -277,8 +325,26 @@ class PlayerEventListener implements Listener
             $p->updateScoreTag();
             $p->getSession()->getScoreboard()->setScoreboard(new KitPvP($p));
             //  $p->getSession()->getScoreboard()->setLine(10, "Hello my jiggger");
+            PlayerDataManager::login($p);
+            new TempFloatingItem($p, Item::get(45)->setCustomName("YEES"));
+            //$inv = InvMenu::create(InvMenu::TYPE_CHEST);
+            //$inv->send($p);
+            // $inv->setName("Crate");
+            // $inv->readonly(true);
+            // $this->crate($p, $inv);
+            echo "bruh";
         }
     }
+
+    public function crate(HorizonPlayer $p, SharedInvMenu $inv)
+    {
+        $items = KitManager::parseContents(FileManager::getYamlData("crate")["items"]);
+        Horizon::getInstance()->getScheduler()->scheduleRepeatingTask(new CrateItemShiftTask($inv, $items, function (Item $item) use ($p) {
+            $p->getInventory()->addItem($item);
+            $p->sendMessage("§aYou just won§r " . $item->getCustomName());
+        }), 1);
+    }
+
 
     public function onKillStreakAdd(AddKillStreakEvent $event)
     {
@@ -383,13 +449,10 @@ class PlayerEventListener implements Listener
                 $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->maxX, $a->minY, $a->minZ)));
                 $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->maxX, $a->maxY, $a->minZ)));
                 $p->getLevel()->addParticle(new FlameParticle(new Vector3($a->maxX, $a->maxY, $a->maxZ)));
-                var_dump($koth->isInsideArena($to));
                 if ($koth->active) {
                     if ($koth->isInsideArena($to) && !$koth->isInsideArena($from)) {
-                        var_dump($koth);
                         new PlayerEnterKothEvent($p, $koth);
                     } elseif (!$koth->isInsideArena($to) && $koth->isInsideArena($from)) {
-                        var_dump($koth);
                         new PlayerLeaveKothEvent($p, $koth);
                     }
                 }
@@ -407,7 +470,6 @@ class PlayerEventListener implements Listener
     {
         $p = $event->getPlayer();
         if ($p instanceof HorizonPlayer) {
-            print_r($p->getSession()->data);
             SessionManager::remove($p);
         }
     }
@@ -418,10 +480,10 @@ class PlayerEventListener implements Listener
         $args = explode(" ", $event->getCommand());
         $command = $args[0];
         array_shift($args);
-        if ($sender instanceof HorizonPlayer) {
-            if ($sender->isInCombat()) {
-
-            }
+        $disallowed = ["hub", "spawn", "kit"];
+        if (($sender instanceof HorizonPlayer) && $sender->isInCombat() && in_array($command, $disallowed, true)) {
+            $sender->sendMessage("§cYou cannot run this command in combat");
+            $event->setCancelled();
         }
     }
 

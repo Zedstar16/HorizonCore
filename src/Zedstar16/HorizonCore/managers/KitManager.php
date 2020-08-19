@@ -9,7 +9,10 @@ use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\Player;
+use pocketmine\Server;
 use Zedstar16\HorizonCore\components\Constants;
+use Zedstar16\HorizonCore\Horizon;
+use Zedstar16\ZDuels\Main;
 
 class KitManager
 {
@@ -17,7 +20,6 @@ class KitManager
     public static function parseItem(string $string): Item
     {
         $data = explode(":", $string);
-        print_r($data);
         $id = (int)$data[0];
         $damage = (int)$data[1];
         $count = (int)$data[2];
@@ -28,9 +30,9 @@ class KitManager
             }
             if (isset($data[4])) {
                 $data = array_slice($data, 4);
-                for ($i = 0, $iMax = count($data); $i < $iMax; $i++) {
+                foreach ($data as $i => $iValue) {
                     if (is_int($i / 2)) {
-                        $enchant = Enchantment::getEnchantmentByName($data[$i]);
+                        $enchant = Enchantment::getEnchantmentByName($iValue);
                         $instance = new EnchantmentInstance($enchant, $data[$i + 1]);
                         $item->addEnchantment($instance);
                         $i++;
@@ -41,7 +43,8 @@ class KitManager
         } else return $item;
     }
 
-    public static function indexItem(Item $item) : String{
+    public static function indexItem(Item $item): string
+    {
         $store = [];
         $store[] = $item->getId();
         $store[] = $item->getDamage();
@@ -69,24 +72,34 @@ class KitManager
         return $data;
     }
 
+    public static function parseContents(array $contents)
+    {
+        $data = [];
+        foreach ($contents as $index => $itemstring) {
+            $data[$index] = self::parseItem($itemstring);
+        }
+        return $data;
+    }
 
-    public static function getKit(Player $player, $kit, Int $type, $default = false): ?array
+
+    public static function getKit(Player $player, $kit, int $type, $default = false): ?array
     {
         $contents = [];
         $type = Constants::$kit[$type];
         $playerdata = PlayerDataManager::getData($player->getName())["customkits"][$type][$kit] ?? null;
         $normal = FileManager::getYamlData("$type/$kit");
         $data = $playerdata !== null ? (!$default ? $playerdata : $normal) : $normal;
-        foreach($data["armor"] as $slot => $armor){
+        foreach ($data["armor"] as $slot => $armor) {
             $contents["armor"][$slot] = self::parseItem($armor);
         }
-        foreach($data["inventory"] as $slot => $item){
+        foreach ($data["inventory"] as $slot => $item) {
             $contents["inventory"][$slot] = self::parseItem($item);
         }
         return $contents;
     }
 
-    public static function saveCustomKit(Player $player, $kit, $type, $data){
+    public static function saveCustomKit(Player $player, $kit, $type, $data)
+    {
         $contents = [];
         $type = Constants::$kit[$type];
         $playerdata = FileManager::getJsonData("players/" . $player->getLowerCaseName());
@@ -95,6 +108,21 @@ class KitManager
         return $contents;
     }
 
+    public static function syncDuelKits()
+    {
+        /** @var Main $duels */
+        $duels = Server::getInstance()->getPluginManager()->getPlugin("ZDuels");
+        if ($duels !== null) {
+            $kits = yaml_parse_file($duels->getDataFolder() . "kits.yml");
+            foreach ($kits as $kitname => $data) {
+                $data = [
+                    "armor" => $data["armor"],
+                    "inventory" => $data["item"]
+                ];
+                FileManager::saveYamlData("duels/$kitname", $data);
+            }
+        }
+    }
 
 
 }

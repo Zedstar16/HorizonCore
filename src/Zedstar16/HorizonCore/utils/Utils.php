@@ -50,7 +50,8 @@ class Utils
             "gapple" => "§6Gapple",
             "buildpvp" => "§9BuildPvP",
             "fist" => "§2Fist",
-            "combo" => "§bCombo"
+            "combo" => "§bCombo",
+            "tank" => "§bTank"
         ];
         return $bold ? "§l" . $names[$string] : $names[$string] ?? $string;
     }
@@ -96,6 +97,18 @@ class Utils
     public static function error(Throwable $error)
     {
         Server::getInstance()->getLogger()->error($error->getMessage() . "in {$error->getFile()} on Line {$error->getLine()}");
+    }
+
+    public static function __toArray($obj)
+    {
+        if (is_object($obj) || is_array($obj)) {
+            $ret = (array)$obj;
+            foreach ($ret as &$item) {
+                $item = self::__toArray($item);
+            }
+            return $ret;
+        }
+        return $obj;
     }
 
 

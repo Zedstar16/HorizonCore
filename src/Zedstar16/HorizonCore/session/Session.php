@@ -4,6 +4,7 @@
 namespace Zedstar16\HorizonCore\session;
 
 
+use pocketmine\scheduler\ClosureTask;
 use Zedstar16\HorizonCore\components\BossBarTitles;
 use Zedstar16\HorizonCore\components\Economy;
 use Zedstar16\HorizonCore\components\Experience\Experience;
@@ -52,15 +53,23 @@ class Session
             "blocks_placed",
             "blocks_broken",
         ];
+        $this->clientData = Horizon::$players[$player->getName()]["clientData"];
         $this->data = array_fill_keys($data, 0);
+        //$this->initialiseProperties();
+        Horizon::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new BossBarUpdateTask($player), 50, 80);
+    }
+
+    public function initialiseProperties(): void
+    {
+        // Horizon::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (Int $currentTick) : void{
         $this->bossbar = new DiverseBossBar();
-        $this->bossbar->addPlayer($player);
+        $this->bossbar->addPlayer($this->player);
         $this->bossbar->setTitle("§bPlaying on §6Horizon§cPE");
         $this->bossbar->setSubTitle(BossBarTitles::TITLES[0]);
-        $this->scoreboard = new Scoreboard($player);
-        $this->economy = new Economy($player);
-        $this->experience = new Experience($player);
-        Horizon::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new BossBarUpdateTask($player), 50, 80);
+        $this->scoreboard = new Scoreboard($this->player);
+        $this->economy = new Economy($this->player);
+        $this->experience = new Experience($this->player);
+        //  }), 5);
     }
 
     public function getPlayer(): HorizonPlayer
@@ -68,7 +77,8 @@ class Session
         return $this->player;
     }
 
-    public function getPlayerData(){
+    public function getPlayerData()
+    {
         $return = [];
         $os = ["Unknown", "Android", "iOS", "macOS", "FireOS", "GearVR", "HoloLens", "Windows 10", "Windows", "Dedicated", "Orbis", "NX"];
         $UI = ["Classic UI", "Pocket UI"];
@@ -110,22 +120,22 @@ class Session
         $this->data[$key] += $value;
     }
 
-    public function getBossBar(): DiverseBossBar
+    public function getBossBar(): ?DiverseBossBar
     {
         return $this->bossbar;
     }
 
-    public function getEconomy(): Economy
+    public function getEconomy(): ?Economy
     {
         return $this->economy;
     }
 
-    public function getExperience(): Experience
+    public function getExperience(): ?Experience
     {
         return $this->experience;
     }
 
-    public function getScoreboard(): Scoreboard
+    public function getScoreboard(): ?Scoreboard
     {
         return $this->scoreboard;
     }

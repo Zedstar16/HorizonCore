@@ -15,9 +15,14 @@ class SessionManager
 
     public static function add(HorizonPlayer $player)
     {
+        echo "a";
         $session = new Session($player);
-        self::$sessions[$player->getName()] = $session;
+        echo "b";
         $session->clientData = Horizon::$players[$player->getName()]["clientData"];
+        self::$sessions[$player->getName()] = $session;
+        //var_dump(self::$sessions);
+        echo "c";
+        echo "d";
     }
 
     public static function getSession(HorizonPlayer $player)

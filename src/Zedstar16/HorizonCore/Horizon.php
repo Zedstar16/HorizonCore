@@ -15,9 +15,11 @@ use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
+use SQLite3;
 use Zedstar16\HorizonCore\cache\Cache;
 use Zedstar16\HorizonCore\components\ChatHandler\ChatFilter;
 use Zedstar16\HorizonCore\components\Crate\CrateItemShiftTask;
+use Zedstar16\HorizonCore\components\DB;
 use Zedstar16\HorizonCore\entities\Bosses\SnowmanBoss;
 use Zedstar16\HorizonCore\entities\Bosses\ZombieBoss;
 use Zedstar16\HorizonCore\entities\FireworksRocket;
@@ -86,6 +88,7 @@ class Horizon extends PluginBase implements Listener
         foreach (self::ENTITIES as $entity) {
             if (Entity::registerEntity($entity, true)) $i++;
         }
+        $this->getLogger()->info("Total Lines of code: 12452");
         $this->getLogger()->notice("Registered $i/" . count(self::ENTITIES) . " custom entities successfully!");
         // CrateManager::registerCrates();
         $bad = ["cunt", "fuck", "shit", "nigga", "kys", "nigger"];
@@ -98,7 +101,10 @@ class Horizon extends PluginBase implements Listener
         // var_dump($this->lines);
         //var_dump($this->f);
         //$this->getScheduler()->scheduleRepeatingTask(new CrateItemShiftTask(), 1);
-
+        $db = new SQLite3("plugins/data.db");
+        $query = "CREATE TABLE IF NOT EXISTS customer(customerid INT, customername VARCHAR(255), address VARCHAR(16), phone INT, dateofbirth DATE);";
+        $db->exec($query);
+        DB::init();
 
     }
 

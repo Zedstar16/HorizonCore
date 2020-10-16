@@ -29,7 +29,7 @@ class KitCommand extends Command
                     $sender->getInventory()->setContents($kit["inventory"]);
                     $sender->getArmorInventory()->setContents($kit["armor"]);
                     $sender->sendMessage("Claimed $args[0] kit");
-                } else $sender->sendMessage("You have already claimeda kit this life");
+                } else $sender->sendMessage("You have already claimed a kit this life");
             }
         }
     }

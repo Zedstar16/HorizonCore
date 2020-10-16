@@ -41,7 +41,6 @@ class Koth
 
     public function __construct(Server $server)
     {
-        echo "started";
         $this->s = $server;
         $this->baseTick = -1;
         $pos = Horizon::Config()["kothcenter"];

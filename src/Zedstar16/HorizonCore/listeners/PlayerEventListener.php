@@ -4,6 +4,7 @@
 namespace Zedstar16\HorizonCore\listeners;
 
 
+use pocketmine\block\utils\ColorBlockMetaHelper;
 use pocketmine\entity\Living;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
@@ -154,6 +155,21 @@ class PlayerEventListener implements Listener
         $cause = $event->getPlayer()->getLastDamageCause();
         $player = $event->getPlayer();
         $string = null;
+        $causes = [
+            EntityDamageEvent::CAUSE_CONTACT => "died from contact",
+            EntityDamageEvent::CAUSE_ENTITY_ATTACK => "died to an entity",
+            EntityDamageEvent::CAUSE_ENTITY_EXPLOSION => "died in an entity explosion",
+            EntityDamageEvent::CAUSE_SUFFOCATION => "suffocated to death",
+            EntityDamageEvent::CAUSE_FALL => "fell to their death",
+            EntityDamageEvent::CAUSE_DROWNING => "drowned to death",
+            EntityDamageEvent::CAUSE_FIRE => "burned to death",
+            EntityDamageEvent::CAUSE_FIRE_TICK => "burned to death",
+            EntityDamageEvent::CAUSE_LAVA => "burned to death",
+            EntityDamageEvent::CAUSE_BLOCK_EXPLOSION => "died in an explosion",
+            EntityDamageEvent::CAUSE_VOID => "was lost to the void",
+            EntityDamageEvent::CAUSE_CUSTOM => "died to an unknown cause",
+            EntityDamageEvent::CAUSE_STARVATION => "starved to death"
+        ];
         if ($player instanceof HorizonPlayer) {
             $player->has_claimed_kit_this_life = false;
             $player->getSession()->incrementValue("deaths", 1);
@@ -190,24 +206,10 @@ class PlayerEventListener implements Listener
                     }
                 }
             } elseif ($cause !== null && isset($causes[$cause->getCause()])) {
-                $causes = [
-                    EntityDamageEvent::CAUSE_CONTACT => "died from contact",
-                    EntityDamageEvent::CAUSE_ENTITY_ATTACK => "died to an entity",
-                    EntityDamageEvent::CAUSE_ENTITY_EXPLOSION => "died in an entity explosion",
-                    EntityDamageEvent::CAUSE_SUFFOCATION => "suffocated to death",
-                    EntityDamageEvent::CAUSE_FALL => "fell to their death",
-                    EntityDamageEvent::CAUSE_DROWNING => "drowned to death",
-                    EntityDamageEvent::CAUSE_FIRE => "burned to death",
-                    EntityDamageEvent::CAUSE_FIRE_TICK => "burned to death",
-                    EntityDamageEvent::CAUSE_LAVA => "burned to death",
-                    EntityDamageEvent::CAUSE_BLOCK_EXPLOSION => "died in an explosion",
-                    EntityDamageEvent::CAUSE_VOID => "was lost to the void",
-                    EntityDamageEvent::CAUSE_CUSTOM => "died to an unknown cause",
-                    EntityDamageEvent::CAUSE_STARVATION => "starved to death"
-                ];
-                $string = "§c🕱 §e{$player->getName()}§6 " . $causes[$cause->getCause()];
+                $string = "§c☠ §e{$player->getName()}§6 " . $causes[$cause->getCause()];
             }
         }
+        var_dump($cause->getCause());
         $event->setDeathMessage($string ?? "unlisted");
     }
 

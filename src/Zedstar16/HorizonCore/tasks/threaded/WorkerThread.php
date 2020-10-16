@@ -6,16 +6,16 @@ namespace Zedstar16\HorizonCore\tasks\threaded;
 
 use pocketmine\Thread;
 
-class Worker extends Thread
+class WorkerThread extends Thread
 {
 
     public const UPDATE_LEADERBOARD_DATA = 0;
     public const UPDATE_PLAYER_STATS = 1;
+
     public static $tasks = [];
 
     public function __construct()
     {
-
         $this->start(PTHREADS_INHERIT_NONE);
     }
 

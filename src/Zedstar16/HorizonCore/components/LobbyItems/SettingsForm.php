@@ -34,7 +34,6 @@ class SettingsForm extends BaseFormComponent
         foreach ($buttons as $button) {
             $form->addButton($button);
         }
-        $this->p->sendForm($form);
     }
 
     public function chatFilter()
@@ -51,7 +50,6 @@ class SettingsForm extends BaseFormComponent
     {
 
         $buttons = [];
-
         $form = new SimpleForm(function (Player $player, $data = null) use ($buttons) {
             if (isset($buttons[$data])) {
                 $id = $buttons[$data]["id"];

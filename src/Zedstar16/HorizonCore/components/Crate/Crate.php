@@ -5,15 +5,11 @@ namespace Zedstar16\HorizonCore\components\Crate;
 
 
 use pocketmine\item\Item;
-use pocketmine\level\particle\LavaParticle;
 use pocketmine\level\Position;
-use pocketmine\math\Vector3;
 use pocketmine\Player;
 use Zedstar16\HorizonCore\components\TempFloatingItem;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\libs\muqsit\invmenu\InvMenu;
-use Zedstar16\HorizonCore\managers\FileManager;
-use Zedstar16\HorizonCore\managers\KitManager;
 use Zedstar16\HorizonCore\utils\Utils;
 
 class Crate

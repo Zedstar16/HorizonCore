@@ -36,6 +36,7 @@ class ChatFilter
             "s" => ["5"],
             "b" => ["8"],
         ];
+
         foreach ($split as $char) {
             if (!in_array($char, $char_list, true)) {
                 $this->cansend = false;

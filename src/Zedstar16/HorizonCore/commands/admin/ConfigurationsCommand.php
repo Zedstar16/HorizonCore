@@ -15,7 +15,6 @@ use Zedstar16\HorizonCore\managers\KitManager;
 class ConfigurationsCommand extends Command
 {
 
-
     public function __construct()
     {
         parent::__construct("conf");

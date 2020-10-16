@@ -11,4 +11,5 @@ class LegendaryEnvoyEntity extends Fallable
 
     protected $id = self::ENDER_CHEST;
 
+
 }

@@ -21,7 +21,6 @@ class BossCommand extends Command
         $this->setPermission("horizon.admin");
     }
 
-
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
         if ($sender instanceof Player) {

@@ -144,5 +144,13 @@
       "id": 3,
       "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUCADM1AAA="
     }
-  ]
+  ],
+  "Zedstar16": {
+    "inventory": [
+      {
+        "id": 310,
+        "nbt_b64": "CgAACgcAZGlzcGxheQgEAE5hbWUeAMKncsKnbMKnZUJ1aWxkUHZQwqdywqdlIEhlbG1ldAAJBABlbmNoCgIAAAACAgBpZAAAAgMAbHZsAQAAAgIAaWQRAAIDAGx2bAMAAAA="
+      }
+    ]
+  }
 }

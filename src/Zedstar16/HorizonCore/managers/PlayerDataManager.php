@@ -4,6 +4,8 @@
 namespace Zedstar16\HorizonCore\managers;
 
 use pocketmine\Server;
+use SQLite3;
+use Zedstar16\HorizonCore\components\DB;
 use Zedstar16\HorizonCore\Horizon;
 use Zedstar16\HorizonCore\utils\Utils;
 
@@ -41,6 +43,7 @@ class PlayerDataManager
 
     public static function login($player)
     {
+
         $data = self::getData($player);
         $playername = Utils::stringify($player);
         $player = Horizon::getPlayer($playername);
@@ -102,10 +105,30 @@ class PlayerDataManager
                     "ui" => $player->getSession()->getPlayerData()["UI"],
                     "controls" => $player->getSession()->getPlayerData()["Controls"],
                     "timestamp" => time()
-                ]
-            ];
+                ]];
+
+            $stmt1 = "INSERT INTO players(";
+            $values = "VALUES(";
+            $i = 0;
+            foreach ($data as $key => $value) {
+                $i++;
+                $suffix = $i !== count($data) ? ", " : ")";
+                $stmt1 .= $key . $suffix;
+                $values .= $value . $suffix;
+            }
+            $query = $stmt1 . " " . $values . ";";
+
+
             FileManager::saveJsonData("players/" . $playername, $data);
         }
+    }
+
+    public function db()
+    {
+        $db = new SQLite3("players.db");
+        $query = "CREATE TABLE IF NOT EXISTS customer(customerid INT, customername VARCHAR(255), address VARCHAR(16), phone INT, dateofbirth DATE);";
+        $db->exec($query);
+
     }
 
 

@@ -34,10 +34,9 @@ class BaseChatHandler
         $cleaned = $filter->getCleanedMessage();
         if ($filter->cansend) {
             return $formatter->getFormattedMessage() . $filter->getCleanedMessage();
-        } else {
-            $this->p->sendMessage("§cYou cannot send a message with these characters");
-            return null;
         }
+        $this->p->sendMessage("§cYou cannot send a message with these characters");
+        return null;
     }
 
     public function getResultant(): array
